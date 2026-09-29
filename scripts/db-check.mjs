@@ -4,7 +4,9 @@
 //
 // Solo toca filas que crea él mismo (slug "zz-check-…") y las borra al terminar. Se puede correr las
 // veces que haga falta: es la prueba de regresión de la base (¿sigue todo cerrado al público?).
+import { createHmac } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
+import { handleWebhook } from "../src/lib/mercadopago/webhook.ts";
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -214,7 +216,69 @@ async function main() {
   });
   ok("departamento inválido → invalid_department", badDep.error?.message === "invalid_department");
 
-  console.log("\n8. Recordatorios de configuración (no son fallas)");
+  console.log("\n8. Webhook completo (firma → pago → pedido → stock), sin llamar a Mercado Pago");
+  {
+    const wp = await mkProduct("webhook", 2, 1000);
+    const wo = await mkOrder(wp, 1, 60);
+    const secret = "secreto-de-prueba";
+    const paymentId = String(Date.now());
+    const sign = (id, requestId, s = secret) => {
+      const ts = String(Date.now());
+      const v1 = createHmac("sha256", s).update(`id:${id};request-id:${requestId};ts:${ts};`).digest("hex");
+      return new Headers({ "x-signature": `ts=${ts},v1=${v1}`, "x-request-id": requestId });
+    };
+    const paid = [];
+    const deps = (over = {}) => ({
+      secret,
+      db: svc,
+      onPaid: async (id) => paid.push(id),
+      fetchPayment: async () => ({
+        id: paymentId,
+        status: "approved",
+        external_reference: wo.data.order_id,
+        transaction_amount: wo.data.total,
+        currency_id: "UYU",
+        payment_method_id: "visa",
+        payment_type_id: "credit_card",
+      }),
+      ...over,
+    });
+    const hook = (headers, over) =>
+      handleWebhook(
+        {
+          url: `https://tienda.example/api/webhooks/mercadopago?data.id=${paymentId}&type=payment`,
+          headers,
+          body: { type: "payment", data: { id: paymentId } },
+        },
+        deps(over),
+      );
+
+    let res = await hook(sign(paymentId, "r1", "secreto-falso"));
+    ok("una notificación con firma falsa se rechaza (401) y no cambia nada", res.status === 401 && (await order(wo.data.order_id)).order_status === "awaiting_payment");
+
+    res = await hook(sign(paymentId, "r2"));
+    ok("notificación firmada: 200 y el pedido queda pagado", res.status === 200 && res.body.became_paid === true, JSON.stringify(res));
+    const wOrder = await order(wo.data.order_id);
+    ok("…estado, método y stock correctos", wOrder.order_status === "paid" && wOrder.payment_status === "approved" && wOrder.stock_status === "committed");
+    p = await product(wp);
+    ok("…el stock baja de 2 a 1 y no queda reserva", p.stock === 1 && p.stock_reserved === 0, JSON.stringify(p));
+    ok("…se avisó UNA vez que se pagó", paid.length === 1 && paid[0] === wo.data.order_id);
+
+    res = await hook(sign(paymentId, "r3"));
+    ok("el reintento de Mercado Pago es idempotente", res.status === 200 && res.body.became_paid === false && paid.length === 1);
+    p = await product(wp);
+    ok("…y no descuenta stock otra vez", p.stock === 1, JSON.stringify(p));
+
+    const { data: pays } = await svc.from("payments").select("provider_payment_id, status, amount, raw").eq("order_id", wo.data.order_id);
+    ok("un solo registro de pago, con monto y metadatos mínimos",
+      pays?.length === 1 && Number(pays[0].amount) === wo.data.total && !JSON.stringify(pays[0].raw).includes("payer"),
+      JSON.stringify(pays));
+
+    res = await hook(sign(paymentId, "r4"), { fetchPayment: async () => null });
+    ok("un pago que Mercado Pago no conoce se ignora sin error (200)", res.status === 200 && res.body.ignored === "payment_not_found");
+  }
+
+  console.log("\n9. Recordatorios de configuración (no son fallas)");
   const { data: settings } = await svc.from("store_settings").select("shipping_configured").single();
   console.log(`  ${settings?.shipping_configured ? "✓" : "•"} Costos de envío ${settings?.shipping_configured ? "configurados" : "SIN configurar (se cargan desde /admin)"}`);
   const { count: admins } = await svc.from("admin_users").select("*", { head: true, count: "exact" });

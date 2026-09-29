@@ -20,7 +20,7 @@ Compra: Checkout → Backend → Mercado Pago → Webhook → Backend → Supaba
 | 2 | Catálogo y página de producto | ✅ |
 | 3 | Carrito (persistente, con panel lateral y página `/carrito`) | ✅ |
 | 4 | Esquema Supabase, RLS, stock | ✅ |
-| 5 | Checkout Uruguay + Mercado Pago + webhook | ⏳ |
+| 5 | Checkout Uruguay + Mercado Pago + webhook | ✅ código y pruebas · ⏳ falta probar con credenciales reales |
 | 6 | Emails (cliente, admin, tracking) | ⏳ |
 | 7 | Panel `/admin` | ⏳ |
 | 8 | Legales (términos, privacidad, cambios, envíos) | ⏳ |
@@ -56,6 +56,49 @@ marcados como **Demo** y sin indexar en buscadores. Se eliminan desde `/admin` s
 
 Todo lo de Supabase (tablas, seguridad, stock, cómo aplicar la migración y cómo verificarla con
 `npm run db:check`) está explicado en [`supabase/README.md`](supabase/README.md).
+
+## Mercado Pago (Checkout Pro)
+
+**Cómo funciona una compra** (nunca se confía en el navegador para saber si se pagó):
+
+```
+/checkout → createCheckout (servidor) → create_order (SQL: precios de la base + reserva de stock)
+         → preferencia de Mercado Pago (monto = el del pedido, vence con la reserva) → el comprador paga en Mercado Pago
+         → Mercado Pago avisa a /api/webhooks/mercadopago (firma verificada)
+         → el servidor consulta el pago REAL a la API de Mercado Pago → apply_payment (SQL, idempotente)
+         → pedido pagado + stock descontado
+/pedido/[token]  ← el comprador vuelve acá; la página lee el estado de la base (y, si el aviso se demora,
+                   consulta el pago a Mercado Pago como red de seguridad)
+```
+
+**Qué tenés que configurar** (una sola vez):
+
+1. En [Tus integraciones](https://www.mercadopago.com.uy/developers/panel/app) creá una aplicación con el producto
+   **Checkout Pro**.
+2. Copiá el **Access Token de prueba** (Credenciales de prueba) a `MERCADOPAGO_ACCESS_TOKEN` en `.env.local`.
+3. El aviso de pagos necesita una dirección pública: conectá el repo a Vercel y cargá allí las variables de
+   `.env.example` (incluida `NEXT_PUBLIC_SITE_URL` con el dominio real). Con `localhost` Mercado Pago no puede
+   avisar ni devolver al comprador (el checkout igual funciona, pero el pedido no se confirma solo).
+4. En *Tus integraciones → tu aplicación → Webhooks → Configurar notificaciones*: URL
+   `https://TU-DOMINIO/api/webhooks/mercadopago`, evento **Pagos**. Guardá y copiá la **Clave secreta** a
+   `MERCADOPAGO_WEBHOOK_SECRET` (en Vercel). Se configura por separado para modo prueba y modo producción.
+5. Probá con [compras de prueba](https://www.mercadopago.com.uy/developers/es/docs/checkout-pro/integration-test/test-purchases)
+   (cuenta de prueba de comprador + tarjetas de prueba).
+6. Para vender de verdad: cambiá a las credenciales de **producción** (Access Token y Clave secreta) y hacé una
+   compra real de monto bajo para comprobar todo el circuito.
+
+Reglas de pago en [`src/config/payments.ts`](src/config/payments.ts): modo binario (solo aprobado/rechazado), sin
+pagos en efectivo (Abitab/RedPagos) y máximo de pedidos sin pagar por email.
+
+**Costos de envío:** mientras no estén cargados el checkout no cobra (así no se regala el envío por olvido).
+Se cargan desde `/admin` (paso 7); hasta entonces, ver [`supabase/README.md`](supabase/README.md).
+
+## Pruebas
+
+```bash
+npm test          # firma del webhook, estados de pago, preferencia, validaciones (sin red)
+npm run db:check  # seguridad, stock concurrente y webhook completo contra tu Supabase real
+```
 
 ## Datos de la marca pendientes
 

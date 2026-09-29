@@ -61,9 +61,33 @@ Ambos archivos son idempotentes: si se ejecutan dos veces no duplican nada.
 7. **Situaciones raras** (monto distinto, cobro doble, reembolso, pago tras cancelación manual): el pedido
    queda marcado `needs_attention` con el motivo; nunca se resuelven en silencio.
 
+## Cargar los costos de envío (hasta que exista `/admin`)
+
+El checkout no cobra mientras `shipping_configured` sea `false`. En el SQL Editor, con TUS valores
+(pesos uruguayos; `0` = envío gratis):
+
+```sql
+-- Costo general y (opcional) envío gratis desde cierto monto. Ej.: 300 y gratis desde 3000.
+update public.store_settings
+   set shipping_default_cost = 300,
+       free_shipping_from    = null,      -- o un número, ej. 3000
+       shipping_configured   = true;
+
+-- Tarifa propia de un departamento (opcional; el resto usa el costo general).
+insert into public.shipping_rates (department, cost) values ('Montevideo', 150)
+on conflict (department) do update set cost = excluded.cost;
+```
+
+## Antes de lanzar
+
+- **Numeración de pedidos:** las pruebas consumen números. Antes de la primera venta real, con la tabla
+  `orders` sin pedidos de prueba, reiniciá el contador:
+  `alter table public.orders alter column order_number restart with 1001;`
+- Borrar los productos demo desde `/admin` y comprobar con `npm run db:check`.
+
 ## Pendiente de definir con el negocio
 
 - **Costos de envío:** no están inventados. `store_settings.shipping_configured` arranca en `false`; se cargan
   desde `/admin` (costo general y por departamento, y envío gratis desde cierto monto).
-- **Medios de pago en efectivo (Abitab, RedPagos):** conviene excluirlos al inicio porque su acreditación
-  demora días y mantendrían el stock reservado. Se decide en el paso del checkout.
+- **Medios de pago en efectivo (Abitab, RedPagos):** quedaron excluidos al inicio (`src/config/payments.ts`)
+  porque su acreditación demora días y mantendrían el stock reservado. Se pueden habilitar más adelante.

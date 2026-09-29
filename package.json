@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "db:check": "node --env-file=.env.local scripts/db-check.mjs"
+    "db:check": "node --env-file=.env.local scripts/db-check.mjs",
+    "test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test \"src/**/*.test.ts\""
   },
   "dependencies": {
     "@react-email/components": "^1.0.12",

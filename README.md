@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Maitena Joyas
 
-## Getting Started
+E-commerce de joyería de plata para Uruguay.
 
-First, run the development server:
+```
+GitHub → Vercel (Next.js + TypeScript) → Supabase (Postgres · Auth · Storage)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Compra: Checkout → Backend → Mercado Pago → Webhook → Backend → Supabase
+        → pedido pagado + stock + emails
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Stack:** Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · Supabase · Mercado Pago (Checkout Pro) · Resend.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Estado del proyecto
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Paso | Contenido | Estado |
+| --- | --- | --- |
+| 0 | Proyecto, GitHub, `.env.example`, README | ✅ |
+| 1 | Sistema de diseño, header, footer, home y categorías | ✅ |
+| 2 | Catálogo y página de producto | ⏳ |
+| 3 | Carrito | ⏳ |
+| 4 | Esquema Supabase, RLS, stock | ⏳ |
+| 5 | Checkout Uruguay + Mercado Pago + webhook | ⏳ |
+| 6 | Emails (cliente, admin, tracking) | ⏳ |
+| 7 | Panel `/admin` | ⏳ |
+| 8 | Legales (términos, privacidad, cambios, envíos) | ⏳ |
+| 9 | SEO, accesibilidad, QA y deploy | ⏳ |
 
-## Learn More
+## Requisitos
 
-To learn more about Next.js, take a look at the following resources:
+- Node.js 20 o superior
+- npm
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Correr en local
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm install
+cp .env.example .env.local   # completar valores (por ahora ninguno es necesario para ver la home)
+npm run dev
+```
 
-## Deploy on Vercel
+Abrir <http://localhost:3000>.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Variables de entorno
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Están documentadas en [`.env.example`](.env.example). **Nunca** subas `.env.local` a GitHub.
+Las claves secretas (`SUPABASE_SERVICE_ROLE_KEY`, `MERCADOPAGO_ACCESS_TOKEN`, `RESEND_API_KEY`)
+solo se usan en el servidor y no llevan prefijo `NEXT_PUBLIC_`.
+
+## Datos de la marca pendientes
+
+`src/config/site.ts` tiene los datos de contacto (email, WhatsApp, Instagram, dirección) en `null`.
+Mientras estén vacíos no se muestran en el sitio. Completarlos cuando se tengan.
+
+Fotografías de categorías: `src/lib/categories.ts` (campo `image`). Mientras sea `null` se muestra un placeholder.
+
+## Deploy (se completa en el paso 9)
+
+1. Subir el repo a GitHub (rama `main` = producción).
+2. En Vercel: *Add New → Project* → importar el repo.
+3. Cargar las variables de `.env.example` en *Settings → Environment Variables*.
+4. Cada push a `main` despliega a producción; cada rama/PR genera un preview.

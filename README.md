@@ -19,7 +19,7 @@ Compra: Checkout → Backend → Mercado Pago → Webhook → Backend → Supaba
 | 1 | Sistema de diseño, header, footer, home y categorías | ✅ |
 | 2 | Catálogo y página de producto | ✅ |
 | 3 | Carrito (persistente, con panel lateral y página `/carrito`) | ✅ |
-| 4 | Esquema Supabase, RLS, stock | ⏳ |
+| 4 | Esquema Supabase, RLS, stock | ✅ |
 | 5 | Checkout Uruguay + Mercado Pago + webhook | ⏳ |
 | 6 | Emails (cliente, admin, tracking) | ⏳ |
 | 7 | Panel `/admin` | ⏳ |
@@ -49,12 +49,13 @@ solo se usan en el servidor y no llevan prefijo `NEXT_PUBLIC_`.
 
 ## Productos demo
 
-Mientras no está conectada la base de datos, la tienda muestra 12 productos de demostración
-(`src/data/demo-products.ts`, con fotos de ejemplo en `public/demo/`), marcados como **Demo** y sin indexar
-en buscadores. En el paso 4 pasan a ser filas de Supabase y se eliminan desde `/admin`, sin tocar código.
+La base viene con 12 productos de demostración (`supabase/seed.sql`, fotos de ejemplo en `public/demo/`),
+marcados como **Demo** y sin indexar en buscadores. Se eliminan desde `/admin` sin tocar código.
 
-Toda la lectura de productos pasa por `src/lib/products.ts`: al conectar Supabase solo cambia el cuerpo de
-esas funciones.
+## Base de datos
+
+Todo lo de Supabase (tablas, seguridad, stock, cómo aplicar la migración y cómo verificarla con
+`npm run db:check`) está explicado en [`supabase/README.md`](supabase/README.md).
 
 ## Datos de la marca pendientes
 

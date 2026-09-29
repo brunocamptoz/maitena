@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:check": "node --env-file=.env.local scripts/db-check.mjs"
   },
   "dependencies": {
     "@react-email/components": "^1.0.12",

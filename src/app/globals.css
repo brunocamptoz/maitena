@@ -40,6 +40,56 @@ body {
   outline-offset: 4px;
 }
 
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Carrito lateral: <dialog> nativo deslizando desde la derecha */
+.drawer {
+  position: fixed;
+  inset: 0 0 0 auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  width: min(100vw, 28rem);
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  background: var(--paper);
+  color: var(--ink);
+  transform: translateX(100%);
+  transition:
+    transform 600ms var(--ease-soft),
+    overlay 600ms allow-discrete,
+    display 600ms allow-discrete;
+}
+.drawer[open] {
+  transform: translateX(0);
+}
+@starting-style {
+  .drawer[open] {
+    transform: translateX(100%);
+  }
+}
+.drawer::backdrop {
+  background: rgb(11 11 11 / 0);
+  transition:
+    background-color 600ms var(--ease-soft),
+    overlay 600ms allow-discrete,
+    display 600ms allow-discrete;
+}
+.drawer[open]::backdrop {
+  background: rgb(11 11 11 / 0.5);
+}
+@starting-style {
+  .drawer[open]::backdrop {
+    background: rgb(11 11 11 / 0);
+  }
+}
+
 /* Reveal on scroll (see components/ui/reveal.tsx) */
 .reveal {
   opacity: 0;

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
+import { CartButton } from "@/components/cart/cart-button";
 import { nav, site } from "@/config/site";
 import { cn } from "@/lib/cn";
 
@@ -60,13 +61,14 @@ export function Header() {
         </Link>
 
         {/* Derecha */}
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-end gap-7">
           <Link
             href="/catalogo"
             className="hidden text-[11px] uppercase tracking-[0.22em] text-paper/70 transition-colors hover:text-paper md:block"
           >
             Ver todo
           </Link>
+          <CartButton />
         </div>
       </div>
 

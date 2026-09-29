@@ -1,3 +1,10 @@
+/** URL pública: variable propia, o el dominio de producción que Vercel provee, o localhost. */
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
+
 /**
  * Datos de la marca. Todo lo que dice `null` es información que todavía no
  * tenemos: NO se muestra en el sitio hasta que se complete acá.
@@ -8,7 +15,7 @@ export const site = {
   tagline: "Joyas y accesorios de plata",
   description:
     "Maitena Joyas: anillos, pulseras, cadenas y aros de plata. Envíos a todo Uruguay.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  url: siteUrl,
   currency: "UYU",
   locale: "es_UY",
 

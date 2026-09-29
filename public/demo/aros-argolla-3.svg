@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-label="Fotografía de ejemplo">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7f4ef"/><stop offset="1" stop-color="#e6e0d6"/></linearGradient>
+<radialGradient id="glow" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#fff" stop-opacity="0.35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+<radialGradient id="sh"><stop offset="0" stop-color="#000" stop-opacity=".18"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="800" height="1000" fill="url(#bg)"/>
+<rect width="800" height="1000" fill="url(#glow)"/>
+<path d="M-100 1100 L520 -100 L640 -100 L20 1100Z" fill="#fff" opacity=".22"/>
+
+<g transform="translate(342 520) rotate(-9) scale(8) translate(-50 -52)" fill="none" stroke="#7d786f" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="36" cy="46" r="17"/><circle cx="36" cy="46" r="14"/><circle cx="70" cy="40" r="11"/><circle cx="70" cy="40" r="8.5"/><path d="M70 61v8M66 69h8"/></g>
+<text x="40" y="960" font-family="Helvetica, Arial, sans-serif" font-size="12" letter-spacing="4" fill="#a39e94">FOTO DE EJEMPLO</text>
+</svg>

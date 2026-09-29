@@ -17,8 +17,8 @@ Compra: Checkout → Backend → Mercado Pago → Webhook → Backend → Supaba
 | --- | --- | --- |
 | 0 | Proyecto, GitHub, `.env.example`, README | ✅ |
 | 1 | Sistema de diseño, header, footer, home y categorías | ✅ |
-| 2 | Catálogo y página de producto | ⏳ |
-| 3 | Carrito | ⏳ |
+| 2 | Catálogo y página de producto | ✅ |
+| 3 | Carrito (persistente, con panel lateral y página `/carrito`) | ✅ |
 | 4 | Esquema Supabase, RLS, stock | ⏳ |
 | 5 | Checkout Uruguay + Mercado Pago + webhook | ⏳ |
 | 6 | Emails (cliente, admin, tracking) | ⏳ |
@@ -46,6 +46,15 @@ Abrir <http://localhost:3000>.
 Están documentadas en [`.env.example`](.env.example). **Nunca** subas `.env.local` a GitHub.
 Las claves secretas (`SUPABASE_SERVICE_ROLE_KEY`, `MERCADOPAGO_ACCESS_TOKEN`, `RESEND_API_KEY`)
 solo se usan en el servidor y no llevan prefijo `NEXT_PUBLIC_`.
+
+## Productos demo
+
+Mientras no está conectada la base de datos, la tienda muestra 12 productos de demostración
+(`src/data/demo-products.ts`, con fotos de ejemplo en `public/demo/`), marcados como **Demo** y sin indexar
+en buscadores. En el paso 4 pasan a ser filas de Supabase y se eliminan desde `/admin`, sin tocar código.
+
+Toda la lectura de productos pasa por `src/lib/products.ts`: al conectar Supabase solo cambia el cuerpo de
+esas funciones.
 
 ## Datos de la marca pendientes
 

@@ -83,6 +83,8 @@ on conflict (department) do update set cost = excluded.cost;
 - **Numeración de pedidos:** las pruebas consumen números. Antes de la primera venta real, con la tabla
   `orders` sin pedidos de prueba, reiniciá el contador:
   `alter table public.orders alter column order_number restart with 1001;`
+- **Costos de envío:** para las pruebas quedaron en **$0 (gratis)**. Cargá tus valores reales antes de vender
+  (SQL de arriba o, cuando exista, `/admin`).
 - Borrar los productos demo desde `/admin` y comprobar con `npm run db:check`.
 
 ## Pendiente de definir con el negocio

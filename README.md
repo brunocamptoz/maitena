@@ -103,6 +103,9 @@ npm run mp:check  # token de Mercado Pago (país, medios de pago, preferencia); 
 
 `mp:check` conviene volver a correrlo al cambiar de credenciales de prueba a las de producción.
 
+`webhook:check` verifica el webhook PUBLICADO: firma un aviso de prueba con tu clave secreta (copiala también a `.env.local`) y lo envía
+al sitio. Sirve para saber si la clave cargada en Vercel es la correcta: `npm run webhook:check -- https://tu-sitio.vercel.app`.
+
 ## Datos de la marca pendientes
 
 `src/config/site.ts` tiene los datos de contacto (email, WhatsApp, Instagram, dirección) en `null`.

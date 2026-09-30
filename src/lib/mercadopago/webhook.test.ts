@@ -62,6 +62,12 @@ describe("webhook de Mercado Pago", () => {
     assert.equal(calls.length, 0);
   });
 
+  it("acepta la clave aunque venga con espacios o saltos de línea de más (error típico al copiar)", async () => {
+    const { deps } = makeDeps({ secret: `  ${SECRET}
+` });
+    assert.equal((await handleWebhook(signed("123"), deps)).status, 200);
+  });
+
   it("rechaza con 401 si falta la firma", async () => {
     const { deps, calls } = makeDeps();
     const res = await handleWebhook(

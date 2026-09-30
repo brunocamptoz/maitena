@@ -1,11 +1,12 @@
 import "server-only";
 import { MercadoPagoConfig, Payment, Preference } from "mercadopago";
 import type { PreferenceBody } from "@/lib/mercadopago/preference";
+import { serverEnv } from "@/lib/env";
 import { processPayment, type Db, type MpPayment, type ProcessOutcome } from "@/lib/mercadopago/process";
 
 /** null si todavía no se configuró MERCADOPAGO_ACCESS_TOKEN (la tienda avisa que los pagos no están disponibles). */
 export function getMercadoPago() {
-  const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
+  const accessToken = serverEnv("MERCADOPAGO_ACCESS_TOKEN");
   if (!accessToken) return null;
   return new MercadoPagoConfig({ accessToken, options: { timeout: 10_000 } });
 }

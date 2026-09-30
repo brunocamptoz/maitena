@@ -1,5 +1,6 @@
 import "server-only";
 import { createClient } from "@supabase/supabase-js";
+import { serverEnv } from "@/lib/env";
 
 /**
  * Cliente con la clave SECRETA (service_role): se salta todas las reglas de seguridad de la base.
@@ -7,8 +8,8 @@ import { createClient } from "@supabase/supabase-js";
  * componentes de cliente: `server-only` hace fallar el build si alguien lo intenta.
  */
 export function createServiceClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const url = serverEnv("NEXT_PUBLIC_SUPABASE_URL");
+  const key = serverEnv("SUPABASE_SERVICE_ROLE_KEY");
   if (!url || !key) {
     throw new Error(
       "Faltan NEXT_PUBLIC_SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY. Completá .env.local (ver README).",

@@ -1,5 +1,6 @@
 import "server-only";
 import { createClient } from "@supabase/supabase-js";
+import { serverEnv } from "@/lib/env";
 
 function required(name: string, value: string | undefined) {
   if (!value) {
@@ -20,8 +21,8 @@ function required(name: string, value: string | undefined) {
  * - `fresh: true` salta el caché (carrito y comprobaciones de stock).
  */
 export function createPublicClient(opts: { fresh?: boolean } = {}) {
-  const url = required("NEXT_PUBLIC_SUPABASE_URL", process.env.NEXT_PUBLIC_SUPABASE_URL);
-  const key = required("NEXT_PUBLIC_SUPABASE_ANON_KEY", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  const url = required("NEXT_PUBLIC_SUPABASE_URL", serverEnv("NEXT_PUBLIC_SUPABASE_URL"));
+  const key = required("NEXT_PUBLIC_SUPABASE_ANON_KEY", serverEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY"));
 
   return createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },

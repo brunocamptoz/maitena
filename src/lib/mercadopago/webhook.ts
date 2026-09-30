@@ -32,8 +32,10 @@ export type WebhookResponse = { status: number; body: Record<string, unknown> };
  */
 export async function handleWebhook(req: WebhookRequest, deps: WebhookDeps): Promise<WebhookResponse> {
   const log = deps.log ?? (() => {});
+  // Un espacio o salto de línea de más al copiar la clave rompe toda validación: se limpia.
+  const secret = deps.secret?.trim();
 
-  if (!deps.secret) {
+  if (!secret) {
     log("error", "Falta MERCADOPAGO_WEBHOOK_SECRET: no se pueden validar notificaciones.");
     return { status: 500, body: { error: "webhook_not_configured" } };
   }
@@ -46,13 +48,19 @@ export async function handleWebhook(req: WebhookRequest, deps: WebhookDeps): Pro
       xSignature: req.headers.get("x-signature"),
       xRequestId: req.headers.get("x-request-id"),
       dataId,
-      secret: deps.secret,
+      secret,
     });
   } catch (error) {
     if (error instanceof InvalidWebhookSignatureError) {
+      // Solo datos de diagnóstico NO sensibles (nunca la clave ni la firma): alcanzan para distinguir
+      // una clave equivocada (SignatureMismatch + largo inesperado) de un aviso mal formado.
       log("warn", "Notificación rechazada: firma inválida", {
         reason: error.reason,
         requestId: error.requestId,
+        hasDataId: dataId !== null,
+        hasRequestId: req.headers.get("x-request-id") !== null,
+        secretLength: secret.length,
+        type: url.searchParams.get("type"),
       });
       return { status: 401, body: { error: "invalid_signature" } };
     }

@@ -1,4 +1,5 @@
 import { revalidateTag } from "next/cache";
+import { serverEnv } from "@/lib/env";
 import { fetchPaymentById, getMercadoPago } from "@/lib/mercadopago/client";
 import { handleWebhook } from "@/lib/mercadopago/webhook";
 import { createServiceClient } from "@/lib/supabase/service";
@@ -17,7 +18,7 @@ export async function POST(request: Request) {
     const result = await handleWebhook(
       { url: request.url, headers: request.headers, body },
       {
-        secret: process.env.MERCADOPAGO_WEBHOOK_SECRET,
+        secret: serverEnv("MERCADOPAGO_WEBHOOK_SECRET"),
         fetchPayment: async (id) => {
           if (!mp) throw new Error("Falta MERCADOPAGO_ACCESS_TOKEN");
           return fetchPaymentById(mp, id);

@@ -98,7 +98,10 @@ Se cargan desde `/admin` (paso 7); hasta entonces, ver [`supabase/README.md`](su
 ```bash
 npm test          # firma del webhook, estados de pago, preferencia, validaciones (sin red)
 npm run db:check  # seguridad, stock concurrente y webhook completo contra tu Supabase real
+npm run mp:check  # token de Mercado Pago (país, medios de pago, preferencia); nunca muestra el token
 ```
+
+`mp:check` conviene volver a correrlo al cambiar de credenciales de prueba a las de producción.
 
 ## Datos de la marca pendientes
 
@@ -107,9 +110,22 @@ Mientras estén vacíos no se muestran en el sitio. Completarlos cuando se tenga
 
 Fotografías de categorías: `src/lib/categories.ts` (campo `image`). Mientras sea `null` se muestra un placeholder.
 
-## Deploy (se completa en el paso 9)
+## Deploy en Vercel
 
-1. Subir el repo a GitHub (rama `main` = producción).
-2. En Vercel: *Add New → Project* → importar el repo.
-3. Cargar las variables de `.env.example` en *Settings → Environment Variables*.
-4. Cada push a `main` despliega a producción; cada rama/PR genera un preview.
+1. El repo está en GitHub (rama `main` = producción).
+2. En Vercel: *Add New → Project* → importar el repo (Next.js se detecta solo).
+3. Cargar en *Settings → Environment Variables* (Production y Preview):
+
+   | Variable | Valor |
+   | --- | --- |
+   | `NEXT_PUBLIC_SUPABASE_URL` | la de `.env.local` |
+   | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | la de `.env.local` |
+   | `SUPABASE_SERVICE_ROLE_KEY` | la de `.env.local` (secreta) |
+   | `MERCADOPAGO_ACCESS_TOKEN` | el de `.env.local` (secreto) |
+   | `MERCADOPAGO_WEBHOOK_SECRET` | la clave secreta del webhook (se obtiene después del primer deploy) |
+
+   **No copies** `NEXT_PUBLIC_SITE_URL=http://localhost:3000` ni `ALLOW_UNCONFIGURED_SHIPPING`. Si `NEXT_PUBLIC_SITE_URL`
+   no está, el sitio usa solo la dirección de producción que da Vercel; cuando tengas dominio propio, cargalo ahí.
+4. Después del primer deploy, configurar el webhook de Mercado Pago (ver arriba) y cargar `MERCADOPAGO_WEBHOOK_SECRET`.
+   Las variables nuevas se aplican en el siguiente deploy (*Deployments → Redeploy*).
+5. Cada push a `main` despliega a producción; cada rama o PR genera un preview.

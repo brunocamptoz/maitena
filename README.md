@@ -81,7 +81,8 @@ Todo lo de Supabase (tablas, seguridad, stock, cómo aplicar la migración y có
    avisar ni devolver al comprador (el checkout igual funciona, pero el pedido no se confirma solo).
 4. En *Tus integraciones → tu aplicación → Webhooks → Configurar notificaciones*: URL
    `https://TU-DOMINIO/api/webhooks/mercadopago`, evento **Pagos**. Guardá y copiá la **Clave secreta** a
-   `MERCADOPAGO_WEBHOOK_SECRET` (en Vercel). Se configura por separado para modo prueba y modo producción.
+   `MERCADOPAGO_WEBHOOK_SECRET` (en Vercel). El panel tiene pestañas **Modo de prueba** y **Modo productivo**, cada una con
+   su URL y su clave: cargá la misma URL en ambas y poné las dos claves separadas por coma (`clavePrueba,claveProduccion`).
 5. Probá con [compras de prueba](https://www.mercadopago.com.uy/developers/es/docs/checkout-pro/integration-test/test-purchases)
    (cuenta de prueba de comprador + tarjetas de prueba).
 6. Para vender de verdad: cambiá a las credenciales de **producción** (Access Token y Clave secreta) y hacé una

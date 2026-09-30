@@ -1,8 +1,11 @@
-import { InvalidWebhookSignatureError, WebhookSignatureValidator } from "mercadopago";
 import { processPayment, type Db, type MpPayment } from "./process.ts";
+import { parseSecrets, verifySignature } from "./signature.ts";
 
 export type WebhookDeps = {
-  /** "Clave secreta" de Webhooks de la aplicación (Tus integraciones → Webhooks). */
+  /**
+   * "Clave secreta" de Webhooks de la aplicación (Tus integraciones → Webhooks). Puede haber varias
+   * separadas por coma (modo de prueba y modo productivo, o una clave en rotación).
+   */
   secret: string | undefined;
   /** Consulta el pago a la API de Mercado Pago; null si no existe. */
   fetchPayment: (id: string) => Promise<MpPayment | null>;
@@ -33,9 +36,9 @@ export type WebhookResponse = { status: number; body: Record<string, unknown> };
 export async function handleWebhook(req: WebhookRequest, deps: WebhookDeps): Promise<WebhookResponse> {
   const log = deps.log ?? (() => {});
   // Un espacio o salto de línea de más al copiar la clave rompe toda validación: se limpia.
-  const secret = deps.secret?.trim();
+  const secrets = parseSecrets(deps.secret);
 
-  if (!secret) {
+  if (secrets.length === 0) {
     log("error", "Falta MERCADOPAGO_WEBHOOK_SECRET: no se pueden validar notificaciones.");
     return { status: 500, body: { error: "webhook_not_configured" } };
   }
@@ -43,28 +46,23 @@ export async function handleWebhook(req: WebhookRequest, deps: WebhookDeps): Pro
   const url = new URL(req.url);
   const dataId = url.searchParams.get("data.id");
 
-  try {
-    WebhookSignatureValidator.validate({
+  const signature = verifySignature(
+    {
       xSignature: req.headers.get("x-signature"),
       xRequestId: req.headers.get("x-request-id"),
       dataId,
-      secret,
+    },
+    secrets,
+  );
+  if (!signature.valid) {
+    // Solo datos de diagnóstico NO sensibles (nunca la clave ni la firma).
+    log("warn", "Notificación rechazada: firma inválida", {
+      reason: signature.reason,
+      requestId: req.headers.get("x-request-id"),
+      type: url.searchParams.get("type"),
+      ...signature.diagnostics,
     });
-  } catch (error) {
-    if (error instanceof InvalidWebhookSignatureError) {
-      // Solo datos de diagnóstico NO sensibles (nunca la clave ni la firma): alcanzan para distinguir
-      // una clave equivocada (SignatureMismatch + largo inesperado) de un aviso mal formado.
-      log("warn", "Notificación rechazada: firma inválida", {
-        reason: error.reason,
-        requestId: error.requestId,
-        hasDataId: dataId !== null,
-        hasRequestId: req.headers.get("x-request-id") !== null,
-        secretLength: secret.length,
-        type: url.searchParams.get("type"),
-      });
-      return { status: 401, body: { error: "invalid_signature" } };
-    }
-    throw error;
+    return { status: 401, body: { error: "invalid_signature" } };
   }
 
   const body = typeof req.body === "object" && req.body !== null ? (req.body as Record<string, unknown>) : {};

@@ -68,6 +68,25 @@ describe("webhook de Mercado Pago", () => {
     assert.equal((await handleWebhook(signed("123"), deps)).status, 200);
   });
 
+  it("con dos claves cargadas (prueba y producción) acepta avisos firmados con cualquiera", async () => {
+    const both = `otra-clave-de-prueba,${SECRET}`;
+    const { deps: d1 } = makeDeps({ secret: both });
+    assert.equal((await handleWebhook(signed("123"), d1)).status, 200);
+    const { deps: d2 } = makeDeps({ secret: `${SECRET},otra-clave` });
+    assert.equal((await handleWebhook(signed("123"), d2)).status, 200);
+    const { deps: d3, calls } = makeDeps({ secret: "una-clave,otra-clave" });
+    assert.equal((await handleWebhook(signed("123"), d3)).status, 401);
+    assert.equal(calls.length, 0);
+  });
+
+  it("al rechazar deja un diagnóstico sin datos sensibles", async () => {
+    const { deps, logs } = makeDeps({ secret: "clave-equivocada" });
+    await handleWebhook(signed("123"), deps);
+    const line = logs.find((l) => l.includes("firma inválida"));
+    assert.ok(line, "debe registrar el rechazo");
+    assert.ok(!line.includes(SECRET) && !line.includes("clave-equivocada"));
+  });
+
   it("rechaza con 401 si falta la firma", async () => {
     const { deps, calls } = makeDeps();
     const res = await handleWebhook(

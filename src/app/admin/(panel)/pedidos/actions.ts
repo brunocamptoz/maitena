@@ -17,7 +17,6 @@ const STALE: OrderActionResult = { error: "El pedido cambió de estado mientras 
 function refresh(orderId: string) {
   revalidatePath(`/admin/pedidos/${orderId}`);
   revalidatePath("/admin/pedidos");
-  revalidatePath("/admin");
 }
 
 /**

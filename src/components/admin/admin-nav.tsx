@@ -2,22 +2,21 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ExternalLink, Gem, LayoutDashboard, LogOut, ShoppingBag, Truck } from "lucide-react";
+import { ExternalLink, Gem, LogOut, ShoppingBag, Truck } from "lucide-react";
 import { signOutAction } from "@/app/admin/actions";
 import { cn } from "@/lib/cn";
 
 const items = [
-  { href: "/admin", label: "Resumen", icon: LayoutDashboard, exact: true, badge: false },
-  { href: "/admin/pedidos", label: "Pedidos", icon: ShoppingBag, exact: false, badge: true },
-  { href: "/admin/productos", label: "Productos", icon: Gem, exact: false, badge: false },
-  { href: "/admin/configuracion", label: "Envíos", icon: Truck, exact: false, badge: false },
+  { href: "/admin/pedidos", label: "Pedidos", icon: ShoppingBag, badge: true },
+  { href: "/admin/productos", label: "Productos", icon: Gem, badge: false },
+  { href: "/admin/configuracion", label: "Envíos", icon: Truck, badge: false },
 ];
 
 export function AdminNav({ email, newOrders }: { email: string; newOrders: number }) {
   const pathname = usePathname();
 
   const links = items.map((item) => {
-    const on = item.exact ? pathname === item.href : pathname.startsWith(item.href);
+    const on = pathname.startsWith(item.href);
     const Icon = item.icon;
     return (
       <Link
@@ -49,7 +48,7 @@ export function AdminNav({ email, newOrders }: { email: string; newOrders: numbe
   return (
     <aside className="bg-ink text-paper lg:sticky lg:top-0 lg:flex lg:h-dvh lg:flex-col">
       <div className="flex items-center justify-between px-5 py-4 lg:block lg:px-7 lg:py-8">
-        <Link href="/admin" className="block">
+        <Link href="/admin/pedidos" className="block">
           <span className="block font-serif text-xl font-light uppercase tracking-[0.32em]">Maitena</span>
           <span className="mt-1 block text-[8px] uppercase tracking-[0.5em] text-paper/50">Panel</span>
         </Link>

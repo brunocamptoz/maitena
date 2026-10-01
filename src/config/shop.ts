@@ -1,6 +1,6 @@
 /** Reglas de tienda que se comparten entre el sitio público y (más adelante) el admin. */
 
-/** Con este stock disponible o menos se muestra "Últimas unidades" y aparece en el dashboard como stock bajo. */
+/** Con este stock disponible o menos se muestra "Últimas unidades" en la tienda y "Poco stock" en el listado del panel. */
 export const LOW_STOCK_THRESHOLD = 3;
 
 /** Un producto se considera "Nuevo" durante estos días desde su publicación. */

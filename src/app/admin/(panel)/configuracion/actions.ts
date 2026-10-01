@@ -40,7 +40,6 @@ export async function saveShipping(_prev: ShippingState, formData: FormData): Pr
   if (error) return failure("ajustes", error);
 
   revalidatePath("/admin/configuracion");
-  revalidatePath("/admin");
   return { ok: true, message: "Costos de envío guardados. Ya se aplican a las compras nuevas." };
 }
 

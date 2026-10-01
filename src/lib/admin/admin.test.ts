@@ -11,7 +11,6 @@ import {
 } from "./order-rules.ts";
 import { productFromForm, productSchema, slugify, validateImageFile } from "./product-schema.ts";
 import { parseShippingForm } from "./shipping-schema.ts";
-import { daysAgoIso, salesSummary, stockAlerts } from "./stats.ts";
 
 const form = (entries: Record<string, string>) => {
   const fd = new FormData();
@@ -195,46 +194,5 @@ describe("parseShippingForm", () => {
     const r = parseShippingForm(getter({ defaultCost: "100", "rate:Narnia": "50" }), depts);
     assert.ok(r.ok);
     assert.deepEqual(r.value.rates, {});
-  });
-});
-
-describe("estadísticas del resumen", () => {
-  const row = (name: string, stock: number, active = true, archived: string | null = null) => ({
-    id: name,
-    name,
-    stock,
-    stock_reserved: 0,
-    active,
-    archived_at: archived,
-  });
-
-  it("separa poco stock de agotado e ignora lo oculto o archivado", () => {
-    const { low, out } = stockAlerts(
-      [row("a", 1), row("b", 3), row("c", 4), row("d", 0), row("e", 1, false), row("f", 0, true, "2026-01-01")],
-      3,
-    );
-    assert.deepEqual(low.map((r) => r.name), ["a", "b"]);
-    assert.deepEqual(out.map((r) => r.name), ["d"]);
-  });
-
-  it("suma las ventas de los últimos 7 y 30 días", () => {
-    const now = Date.parse("2026-09-30T12:00:00Z");
-    const ago = (d: number) => new Date(now - d * 86_400_000).toISOString();
-    const s = salesSummary(
-      [
-        { total: 100, paid_at: ago(1) },
-        { total: 200, paid_at: ago(6.9) },
-        { total: 400, paid_at: ago(20) },
-        { total: 800, paid_at: ago(45) },
-      ],
-      now,
-    );
-    assert.deepEqual(s.last7, { count: 2, total: 300 });
-    assert.deepEqual(s.last30, { count: 3, total: 700 });
-  });
-
-  it("daysAgoIso resta días exactos", () => {
-    const now = Date.parse("2026-09-30T00:00:00Z");
-    assert.equal(daysAgoIso(30, now), "2026-08-31T00:00:00.000Z");
   });
 });

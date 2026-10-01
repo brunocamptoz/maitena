@@ -16,7 +16,6 @@ export type ActionResult = { error?: string };
 function refresh(productId?: string) {
   revalidateTag("products", { expire: 0 });
   revalidatePath("/admin/productos");
-  revalidatePath("/admin");
   if (productId) revalidatePath(`/admin/productos/${productId}`);
 }
 

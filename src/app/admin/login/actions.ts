@@ -14,7 +14,7 @@ const schema = z.object({
 /** Solo se vuelve a una dirección interna del panel (evita redirecciones a sitios externos). */
 function safeNext(value: FormDataEntryValue | null) {
   const next = typeof value === "string" ? value : "";
-  return next.startsWith("/admin") && !next.startsWith("//") && !next.includes("\\") ? next : "/admin";
+  return next.startsWith("/admin") && !next.startsWith("//") && !next.includes("\\") ? next : "/admin/pedidos";
 }
 
 export async function signIn(_prev: LoginState, formData: FormData): Promise<LoginState> {

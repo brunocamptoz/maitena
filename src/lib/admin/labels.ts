@@ -41,8 +41,6 @@ const dateTime = new Intl.DateTimeFormat("es-UY", {
   timeZone: tz,
 });
 const dateLong = new Intl.DateTimeFormat("es-UY", { dateStyle: "long", timeStyle: "short", timeZone: tz });
-const dateOnly = new Intl.DateTimeFormat("es-UY", { day: "2-digit", month: "short", year: "numeric", timeZone: tz });
 
 export const formatDateTime = (iso: string | null | undefined) => (iso ? dateTime.format(new Date(iso)) : "—");
 export const formatDateLong = (iso: string | null | undefined) => (iso ? dateLong.format(new Date(iso)) : "—");
-export const formatDateOnly = (iso: string | null | undefined) => (iso ? dateOnly.format(new Date(iso)) : "—");

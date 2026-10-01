@@ -6,7 +6,7 @@ import { getAdmin } from "@/lib/admin/auth";
 export const metadata: Metadata = { title: "Ingresar" };
 
 export default async function LoginPage(props: PageProps<"/admin/login">) {
-  if (await getAdmin()) redirect("/admin");
+  if (await getAdmin()) redirect("/admin/pedidos");
 
   const { next } = await props.searchParams;
   const nextPath = typeof next === "string" ? next : "";

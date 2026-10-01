@@ -21,9 +21,9 @@ export const site = {
 
   // TODO(cliente): completar con datos reales.
   contact: {
-    email: null as string | null,
+    email: "maitena.joyas.uy@gmail.com" as string | null,
     whatsapp: null as string | null, // solo dígitos con código de país, ej. 598XXXXXXXX
-    instagram: null as string | null, // solo el usuario, sin @
+    instagram: "maitena.joyas.uy" as string | null, // solo el usuario, sin @
     address: null as string | null,
   },
 } as const;

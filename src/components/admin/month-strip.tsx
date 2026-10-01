@@ -8,7 +8,7 @@ import { monthLabel } from "@/lib/admin/sales";
 import { cn } from "@/lib/cn";
 
 const arrow =
-  "inline-flex size-11 shrink-0 items-center justify-center border border-ink bg-ink text-paper/70 transition-colors hover:text-paper aria-disabled:pointer-events-none aria-disabled:opacity-30";
+  "inline-flex size-11 shrink-0 items-center justify-center border border-line text-ink transition-colors hover:border-ink aria-disabled:pointer-events-none aria-disabled:opacity-30";
 
 /**
  * Selector de mes: una tira que se desliza con el dedo o el mouse (y flechas para ir al mes anterior o siguiente).

@@ -73,4 +73,4 @@ if (results.some((r) => r.status === 500 && r.body?.error === "webhook_not_confi
   console.log("✗ Respuesta inesperada. ¿Es la dirección correcta y el sitio ya está desplegado?");
 }
 console.log("");
-process.exit(accepted > 0 && forged.status === 401 && accepted === results.length ? 0 : 1);
+process.exitCode = accepted > 0 && forged.status === 401 && accepted === results.length ? 0 : 1;

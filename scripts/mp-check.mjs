@@ -103,4 +103,4 @@ for (const [label, url] of [
 }
 
 console.log(`\nResultado: ${passed} ✓  ${failed} ✗\n`);
-process.exit(failed ? 1 : 0);
+process.exitCode = failed ? 1 : 0;

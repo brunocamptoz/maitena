@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Badge, EmptyState, PageHeader } from "@/components/admin/ui";
+import { Badge, EmptyState, PageHeader, chip } from "@/components/admin/ui";
 import { requireAdmin } from "@/lib/admin/auth";
 import { ORDER_STATUS_LABEL, formatDateTime } from "@/lib/admin/labels";
 import { cn } from "@/lib/cn";
@@ -72,10 +72,7 @@ export default async function OrdersPage(props: PageProps<"/admin/pedidos">) {
               key={t.key}
               href={href({ estado: t.key })}
               aria-current={tab.key === t.key ? "page" : undefined}
-              className={cn(
-                "border px-4 py-2 text-[10px] uppercase tracking-[0.2em] transition-colors",
-                tab.key === t.key ? "border-ink bg-ink text-paper" : "border-line text-stone hover:border-ink hover:text-ink",
-              )}
+              className={cn(chip(tab.key === t.key), "px-4 py-2")}
             >
               {t.label}
             </Link>

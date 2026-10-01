@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import { Badge, EmptyState, PageHeader } from "@/components/admin/ui";
+import { Badge, EmptyState, PageHeader, chip } from "@/components/admin/ui";
 import { buttonStyles } from "@/components/ui/button";
 import { LOW_STOCK_THRESHOLD } from "@/config/shop";
 import { requireAdmin } from "@/lib/admin/auth";
@@ -59,10 +59,7 @@ export default async function ProductsPage(props: PageProps<"/admin/productos">)
               key={f.key}
               href={{ pathname: "/admin/productos", query: { ...(f.key !== "todos" && { estado: f.key }), ...(q && { q }) } }}
               aria-current={filter === f.key ? "page" : undefined}
-              className={cn(
-                "border px-4 py-2 text-[10px] uppercase tracking-[0.2em] transition-colors",
-                filter === f.key ? "border-ink bg-ink text-paper" : "border-line text-stone hover:border-ink hover:text-ink",
-              )}
+              className={cn(chip(filter === f.key), "px-4 py-2")}
             >
               {f.label}
             </Link>

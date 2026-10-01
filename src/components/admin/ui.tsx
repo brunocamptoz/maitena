@@ -2,6 +2,17 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 /**
+ * Estilo de los recuadros de filtro (estados de pedidos, productos, meses): todos en negro. El elegido se
+ * distingue por el texto en blanco pleno y una línea clara abajo; los demás tienen el texto atenuado.
+ * El tamaño (alto y márgenes internos) lo pone cada uso.
+ */
+export const chip = (active: boolean) =>
+  cn(
+    "inline-flex items-center border border-ink bg-ink text-[10px] uppercase tracking-[0.2em] whitespace-nowrap transition-colors",
+    active ? "text-paper shadow-[inset_0_-2px_0_0_var(--color-paper)]" : "text-paper/55 hover:text-paper",
+  );
+
+/**
  * Títulos en serif con los números en la fuente sans: la serif dibuja cifras "de texto" que se leen como
  * letras (el 1 parece una I). Ej.: "Pedido #1036", "Sin ventas en septiembre 2026".
  */

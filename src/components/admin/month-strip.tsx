@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { chip } from "@/components/admin/ui";
 import { monthLabel } from "@/lib/admin/sales";
 import { cn } from "@/lib/cn";
 
 const arrow =
-  "inline-flex size-11 shrink-0 items-center justify-center border border-line transition-colors hover:border-ink aria-disabled:pointer-events-none aria-disabled:opacity-30";
+  "inline-flex size-11 shrink-0 items-center justify-center border border-ink bg-ink text-paper/70 transition-colors hover:text-paper aria-disabled:pointer-events-none aria-disabled:opacity-30";
 
 /**
  * Selector de mes: una tira que se desliza con el dedo o el mouse (y flechas para ir al mes anterior o siguiente).
@@ -55,10 +56,7 @@ export function MonthStrip({ months, selected }: { months: string[]; selected: s
                 href={href(key)}
                 prefetch={false}
                 aria-current={on ? "page" : undefined}
-                className={cn(
-                  "flex h-11 items-center border px-5 text-[11px] uppercase tracking-[0.2em] whitespace-nowrap transition-colors",
-                  on ? "border-ink bg-ink text-paper" : "border-line text-stone hover:border-ink hover:text-ink",
-                )}
+                className={cn(chip(on), "h-11 px-5 text-[11px]")}
               >
                 {monthLabel(key, "short")}
               </Link>

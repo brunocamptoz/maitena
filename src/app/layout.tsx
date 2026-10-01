@@ -1,9 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Jost } from "next/font/google";
-import { CartDrawer } from "@/components/cart/cart-drawer";
-import { CartSync } from "@/components/cart/cart-sync";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { site } from "@/config/site";
 import "./globals.css";
 
@@ -53,15 +49,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <style>{".reveal{opacity:1!important;transform:none!important}"}</style>
         </noscript>
       </head>
-      <body className="flex min-h-dvh flex-col">
-        <Header />
-        <main id="contenido" className="flex-1">
-          {children}
-        </main>
-        <Footer />
-        <CartDrawer />
-        <CartSync />
-      </body>
+      <body className="flex min-h-dvh flex-col">{children}</body>
     </html>
   );
 }

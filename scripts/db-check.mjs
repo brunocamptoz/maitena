@@ -308,7 +308,68 @@ async function main() {
     ok("un pedido SIN pagar no recibe email de confirmación", blocked.confirmation === "order_not_ready" && sentMails.length === 3);
   }
 
-  console.log("\n9. Recordatorios de configuración (no son fallas)");
+  console.log("\n9. Administración: lo que el panel usa en el servidor");
+  {
+    const ap = await mkProduct("admin", 3, 1000);
+    const unpaid = await mkOrder(ap, 1, 70);
+    const early = await svc.from("orders").update({ order_status: "shipped" }).eq("id", unpaid.data.order_id);
+    ok("no se puede marcar como enviado un pedido sin pago aprobado", early.error?.message === "order_not_paid", JSON.stringify(early.error));
+
+    const paidOrder = await mkOrder(ap, 1, 71);
+    await pay(paidOrder.data.order_id, "adm", "approved", paidOrder.data.total);
+    const guarded = (from, patch) =>
+      svc.from("orders").update(patch).eq("id", paidOrder.data.order_id).in("order_status", from).select("id");
+
+    let step = await guarded(["paid"], { order_status: "preparing" });
+    ok("pagado → preparando", step.data?.length === 1, JSON.stringify(step.error));
+    step = await guarded(["paid"], { order_status: "preparing" });
+    ok("repetir la misma transición (doble clic) no hace nada", step.data?.length === 0);
+    step = await guarded(["paid", "preparing"], {
+      order_status: "shipped",
+      tracking_company: "DAC",
+      tracking_number: "ZZ123",
+      tracking_url: "https://example.com/seguimiento",
+    });
+    const shipped = await order(paidOrder.data.order_id);
+    ok("preparando → enviado con seguimiento y fecha de envío", step.data?.length === 1 && shipped.order_status === "shipped" && !!shipped.shipped_at && shipped.tracking_number === "ZZ123", JSON.stringify(step.error));
+    step = await guarded(["paid", "preparing"], { order_status: "shipped" });
+    ok("un pedido ya enviado no se vuelve a despachar", step.data?.length === 0);
+
+    const cancelPaid = await mkOrder(ap, 1, 72);
+    await pay(cancelPaid.data.order_id, "adm2", "approved", cancelPaid.data.total);
+    let stock = await product(ap);
+    ok("(antes de cancelar) stock descontado por la venta pagada", stock.stock === 1, JSON.stringify(stock));
+    const cancelled = await svc.rpc("cancel_order", { p_order_id: cancelPaid.data.order_id, p_restock: true, p_reason: "admin" });
+    const co = await order(cancelPaid.data.order_id);
+    stock = await product(ap);
+    ok("cancelar un pedido pagado devuelve el stock", cancelled.data === true && stock.stock === 2, JSON.stringify(stock));
+    ok("…lo deja cancelado y marcado: falta reintegrar el dinero", co.order_status === "cancelled" && co.needs_attention === true && co.attention_reason === "refund_pending", JSON.stringify(co));
+    const again = await svc.rpc("cancel_order", { p_order_id: cancelPaid.data.order_id, p_restock: true, p_reason: "admin" });
+    stock = await product(ap);
+    ok("cancelar dos veces no devuelve stock dos veces", again.data === false && stock.stock === 2, JSON.stringify(stock));
+
+    const denyAnon = async (name, call) => {
+      const res = await call;
+      ok(`el público NO puede ${name}`, !!res.error || (Array.isArray(res.data) && res.data.length === 0));
+    };
+    await denyAnon("cambiar los ajustes de envío", anon.from("store_settings").update({ shipping_default_cost: 0 }).eq("id", true).select());
+    await denyAnon("crear tarifas de envío", anon.from("shipping_rates").insert({ department: "Salto", cost: 1 }).select());
+    await denyAnon("modificar pedidos", anon.from("orders").update({ admin_notes: "x" }).eq("id", paidOrder.data.order_id).select());
+    await denyAnon("modificar fotos de productos", anon.from("product_images").update({ position: 9 }).eq("product_id", ap).select());
+    await denyAnon("cancelar pedidos por la API", anon.rpc("cancel_order", { p_order_id: paidOrder.data.order_id }));
+    await denyAnon("reclamar emails por la API", anon.rpc("claim_order_email", { p_order_id: paidOrder.data.order_id, p_kind: "shipping" }));
+  }
+
+  console.log("\n10. Recordatorios de configuración (no son fallas)");
+  try {
+    const res = await fetch(`${url}/auth/v1/settings`, { headers: { apikey: anonKey } });
+    const cfg = await res.json();
+    console.log(
+      `  ${cfg.disable_signup ? "✓" : "•"} Registro público de usuarios ${cfg.disable_signup ? "desactivado" : "ACTIVADO: desactivalo en Authentication → Sign In / Providers (nadie debería poder crear cuentas)"}`,
+    );
+  } catch {
+    console.log("  • No se pudo comprobar si el registro público de usuarios está desactivado.");
+  }
   const { data: settings } = await svc.from("store_settings").select("shipping_configured").single();
   console.log(`  ${settings?.shipping_configured ? "✓" : "•"} Costos de envío ${settings?.shipping_configured ? "configurados" : "SIN configurar (se cargan desde /admin)"}`);
   const { count: admins } = await svc.from("admin_users").select("*", { head: true, count: "exact" });

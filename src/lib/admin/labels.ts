@@ -1,0 +1,48 @@
+/** Textos en español de los estados (los valores internos están en inglés en la base). */
+export const ORDER_STATUS_LABEL: Record<string, string> = {
+  awaiting_payment: "Pago pendiente",
+  paid: "Pago confirmado",
+  preparing: "Preparando pedido",
+  shipped: "Enviado",
+  delivered: "Entregado",
+  cancelled: "Cancelado",
+};
+
+export const PAYMENT_STATUS_LABEL: Record<string, string> = {
+  pending: "Pendiente",
+  approved: "Aprobado",
+  rejected: "Rechazado",
+  cancelled: "Cancelado",
+  refunded: "Reembolsado",
+};
+
+export const ATTENTION_LABEL: Record<string, string> = {
+  duplicate_payment: "Cobro duplicado: el cliente pagó dos veces. Reintegrá uno desde Mercado Pago.",
+  amount_mismatch: "El monto cobrado no coincide con el pedido. Revisalo en Mercado Pago antes de despachar.",
+  stock_shortfall: "Se cobró pero ya no queda stock suficiente. Contactá al cliente o reintegrá el pago.",
+  paid_after_cancel: "Pagó después de que cancelaste el pedido. Reintegrá el pago desde Mercado Pago.",
+  payment_refunded: "El pago fue reembolsado. Revisá si hay que cancelar el pedido.",
+  refund_pending: "Pedido cancelado con pago aprobado: falta reintegrar el dinero desde Mercado Pago.",
+};
+
+export const CATEGORY_LABEL: Record<string, string> = {
+  anillos: "Anillos",
+  pulseras: "Pulseras",
+  cadenas: "Cadenas",
+  aros: "Aros",
+};
+
+const tz = "America/Montevideo";
+const dateTime = new Intl.DateTimeFormat("es-UY", {
+  day: "2-digit",
+  month: "short",
+  hour: "2-digit",
+  minute: "2-digit",
+  timeZone: tz,
+});
+const dateLong = new Intl.DateTimeFormat("es-UY", { dateStyle: "long", timeStyle: "short", timeZone: tz });
+const dateOnly = new Intl.DateTimeFormat("es-UY", { day: "2-digit", month: "short", year: "numeric", timeZone: tz });
+
+export const formatDateTime = (iso: string | null | undefined) => (iso ? dateTime.format(new Date(iso)) : "—");
+export const formatDateLong = (iso: string | null | undefined) => (iso ? dateLong.format(new Date(iso)) : "—");
+export const formatDateOnly = (iso: string | null | undefined) => (iso ? dateOnly.format(new Date(iso)) : "—");

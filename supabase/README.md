@@ -24,9 +24,12 @@ Ambos archivos son idempotentes: si se ejecutan dos veces no duplican nada.
 - **Database → Extensions → `pg_cron`** activada (la migración intenta activarla sola). Libera cada 5 minutos
   el stock de las compras abandonadas.
 
-## Crear el usuario administrador (se hace al armar el panel `/admin`)
+## Crear el usuario administrador
+
+Sin este paso nadie puede entrar a `/admin` (el panel exige estar en la tabla `admin_users`).
 
 1. **Authentication → Users → Add user** con tu email y una contraseña larga (marcar *Auto Confirm User*).
+   La contraseña la elegís y la guardás vos; no hace falta compartirla con nadie.
 2. En el SQL Editor:
 
    ```sql

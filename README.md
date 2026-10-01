@@ -22,7 +22,7 @@ Compra: Checkout → Backend → Mercado Pago → Webhook → Backend → Supaba
 | 4 | Esquema Supabase, RLS, stock | ✅ |
 | 5 | Checkout Uruguay + Mercado Pago + webhook | ✅ código y pruebas · ⏳ falta probar con credenciales reales |
 | 6 | Emails (cliente, admin, tracking) | ✅ código y pruebas · ⏳ falta configurar Resend |
-| 7 | Panel `/admin` | ⏳ |
+| 7 | Panel `/admin` | ✅ código y pruebas · ⏳ falta crear el usuario admin y probarlo con sesión real |
 | 8 | Legales (términos, privacidad, cambios, envíos) | ⏳ |
 | 9 | SEO, accesibilidad, QA y deploy | ⏳ |
 
@@ -92,13 +92,35 @@ Reglas de pago en [`src/config/payments.ts`](src/config/payments.ts): modo binar
 pagos en efectivo (Abitab/RedPagos) y máximo de pedidos sin pagar por email.
 
 **Costos de envío:** mientras no estén cargados el checkout no cobra (así no se regala el envío por olvido).
-Se cargan desde `/admin` (paso 7); hasta entonces, ver [`supabase/README.md`](supabase/README.md).
+Se cargan desde `/admin` → **Envíos** (costo general, costo por departamento y envío gratis desde cierto monto).
+
+## Panel de administración (`/admin`)
+
+Entrar en `/admin` (no aparece en la tienda ni en buscadores). Secciones:
+
+- **Resumen:** pedidos nuevos / preparando / enviados / con pago pendiente, ventas de 7 y 30 días, poco stock y
+  agotados, pedidos que requieren atención (cobro duplicado, monto distinto…) y avisos de configuración pendiente.
+- **Pedidos:** lista con filtros por estado y búsqueda (n.º, nombre o email). En cada pedido: productos, cliente (con
+  enlace a WhatsApp), dirección, pagos, historial y notas internas. Acciones: *Empezar a preparar*, **Agregar tracking**
+  (guarda empresa/código/enlace, pasa a *Enviado* y avisa al cliente por email, una sola vez), *Marcar entregado*,
+  *Cancelar* (con opción de devolver el stock) y reenviar emails.
+- **Productos:** crear/editar (nombre, dirección web automática, descripción, categoría, precio, stock), publicar u ocultar,
+  fotos múltiples (principal, orden, reemplazar, borrar), archivar y borrar (solo si nunca se vendió).
+- **Envíos:** costo general, por departamento y envío gratis desde un monto. Mientras no se guarden, la tienda no cobra.
+
+**Crear el usuario administrador** (una sola vez): ver [`supabase/README.md`](supabase/README.md#crear-el-usuario-administrador).
+
+**Seguridad:** cada página y cada acción comprueba en el servidor que quien llama tiene sesión *y* figura en la tabla
+`admin_users`; tener una cuenta no alcanza. Los estados de un pedido solo los cambia el servidor (la base no deja que
+el panel los edite directamente), con condición sobre el estado anterior para que un doble clic no repita nada. Las
+fotos se suben directo a Supabase Storage (solo escribe un administrador; JPG/PNG/WebP/AVIF hasta 5 MB). Las respuestas
+de `/admin` llevan `noindex` y no se guardan en caché.
 
 ## Emails (Resend)
 
 Cuando un pedido queda **pagado** salen dos correos, cada uno una sola vez (aunque Mercado Pago repita el aviso):
-confirmación al comprador y "Nueva venta" al administrador. El de **envío con seguimiento** al comprador queda listo
-para usarse desde `/admin` (paso 7). Las plantillas están en `src/lib/email/templates.ts`; en desarrollo se ven en
+confirmación al comprador y "Nueva venta" al administrador. El de **envío con seguimiento** sale al cargar el
+tracking en `/admin` (también una sola vez; se puede reenviar a mano). Las plantillas están en `src/lib/email/templates.ts`; en desarrollo se ven en
 `/api/dev/emails/confirmacion`, `/venta` y `/envio`.
 
 **Configurar (una sola vez):**
@@ -129,6 +151,23 @@ npm run mp:check  # token de Mercado Pago (país, medios de pago, preferencia); 
 
 `webhook:check` verifica el webhook PUBLICADO: firma un aviso de prueba con tu clave secreta (copiala también a `.env.local`) y lo envía
 al sitio. Sirve para saber si la clave cargada en Vercel es la correcta: `npm run webhook:check -- https://tu-sitio.vercel.app`.
+
+## Checklist antes de lanzar
+
+Pendientes que NO se pueden olvidar (marcá cada uno cuando esté hecho):
+
+- [ ] **Dominio propio** (ej. `maitenajoyas.com`, hoy sin registrar). Comprarlo, cargar los 3 registros DNS que Resend indica
+      (ya está creado en Resend como `maitenajoyas.com`, estado *not_started*) y esperar *Verified*. Sin esto los
+      clientes reales NO reciben emails.
+- [ ] Con el dominio verificado: `EMAIL_FROM=Maitena Joyas <pedidos@tudominio>`, **vaciar `EMAIL_REDIRECT_TO`** en Vercel y Redeploy.
+- [ ] (Opcional) `ADMIN_NOTIFICATION_EMAIL` → casilla de la tienda; `NEXT_PUBLIC_SITE_URL` → dominio propio en Vercel.
+- [ ] **Costos de envío reales** (hoy en $0 solo para pruebas) y envío gratis si corresponde.
+- [ ] **Productos reales** cargados y productos demo eliminados; Aros Botón vuelve a su precio ($790 de demo) o se borra.
+- [ ] Páginas legales (términos, privacidad, cambios y envíos, contacto) revisadas por un abogado.
+- [ ] Reiniciar la numeración de pedidos (ver `supabase/README.md`).
+- [ ] Supabase → Authentication → Sign In / Providers → **desactivar "Allow new users to sign up"** (`npm run db:check` avisa si sigue activo).
+- [ ] WhatsApp de contacto en `src/config/site.ts` (si se quiere mostrar).
+- [ ] Rotar la API key de Resend (se compartió en un chat).
 
 ## Datos de la marca pendientes
 

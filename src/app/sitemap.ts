@@ -3,6 +3,12 @@ import { site } from "@/config/site";
 import { categories } from "@/lib/categories";
 import { listProducts } from "@/lib/products";
 
+/**
+ * Se arma en cada consulta (los productos salen de la base, que ya cachea ~1 minuto): así un producto nuevo, o uno que
+ * deja de ser demo, entra al mapa enseguida y no recién en el próximo despliegue.
+ */
+export const dynamic = "force-dynamic";
+
 const staticPages = [
   { path: "", priority: 1, changeFrequency: "weekly" },
   { path: "/catalogo", priority: 0.9, changeFrequency: "weekly" },

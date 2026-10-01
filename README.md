@@ -47,11 +47,13 @@ Están documentadas en [`.env.example`](.env.example). **Nunca** subas `.env.loc
 Las claves secretas (`SUPABASE_SERVICE_ROLE_KEY`, `MERCADOPAGO_ACCESS_TOKEN`, `RESEND_API_KEY`)
 solo se usan en el servidor y no llevan prefijo `NEXT_PUBLIC_`.
 
-## Productos demo
+## Productos de ejemplo
 
-La base viene con 12 productos de demostración (`supabase/seed.sql`, fotos de ejemplo en `public/demo/`),
-marcados internamente como demo: la tienda ya no muestra el cartel "Demo", pero siguen sin indexarse en buscadores (ni figuran
-en el sitemap) y en `/admin` llevan la etiqueta **Demo** para reconocerlos. Se eliminan o archivan desde `/admin` sin tocar código.
+`supabase/seed.sql` carga productos de ejemplo (con ilustraciones de `public/demo/`) marcados como demo: no se indexan en buscadores,
+no figuran en el sitemap y llevan la etiqueta **Demo** en `/admin`. Los 4 que quedaban (Anillo Solitario, Pulsera Eslabones,
+Cadena Clásica y Aros Botón) se pasaron a **productos reales** el 2026-10-01: hoy se indexan y figuran en el sitemap, pero siguen con
+las ilustraciones de ejemplo en lugar de fotos. Al editar un producto desde `/admin` se puede cambiar todo (nombre, precio, stock,
+fotos); la marca "demo" solo se cambia desde la base de datos.
 
 ## Base de datos
 

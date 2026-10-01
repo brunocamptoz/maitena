@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LegalPage, L, Owner, Section, StoreEmail } from "@/components/legal/legal-page";
+import { legal } from "@/config/legal";
 import { site } from "@/config/site";
 
 export const metadata: Metadata = {
@@ -83,7 +84,7 @@ export default function TermsPage() {
 
       <Section title="6. Envíos">
         <p>
-          Enviamos a todo Uruguay. Las condiciones, el costo y el seguimiento están en la página de{" "}
+          Enviamos a todo Uruguay{legal.carrier ? ` a través de ${legal.carrier}` : ""}. Las condiciones, el costo y el seguimiento están en la página de{" "}
           <L href="/envios">envíos</L>, que forma parte de estos términos.
         </p>
       </Section>

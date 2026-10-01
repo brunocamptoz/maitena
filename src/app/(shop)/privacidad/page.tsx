@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LegalPage, L, Owner, Section, StoreEmail } from "@/components/legal/legal-page";
+import { legal } from "@/config/legal";
 import { site } from "@/config/site";
 
 export const metadata: Metadata = {
@@ -82,7 +83,8 @@ export default function PrivacyPage() {
             <strong>Mercado Pago:</strong> procesa el pago. Se rige por sus propias políticas.
           </li>
           <li>
-            <strong>Empresas de transporte:</strong> reciben tu nombre, teléfono y dirección para entregarte el pedido.
+            <strong>{legal.carrier ? `${legal.carrier} (empresa de transporte)` : "Empresas de transporte"}:</strong>{" "}
+            {legal.carrier ? "recibe" : "reciben"} tu nombre, teléfono y dirección para entregarte el pedido.
           </li>
           <li>
             <strong>Proveedores tecnológicos</strong> que procesan datos por cuenta nuestra: Supabase (base de datos),

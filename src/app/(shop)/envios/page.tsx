@@ -12,12 +12,13 @@ export const metadata: Metadata = {
 
 export default async function ShippingPage() {
   const freeFrom = await getFreeShippingFrom();
+  const carrier = legal.carrier;
 
   return (
     <LegalPage title="Envíos" intro="Enviamos a todo Uruguay. Esto es lo que tenés que saber antes de comprar.">
       <Section title="Dónde enviamos">
         <p>
-          Hacemos envíos a todos los departamentos de Uruguay. Por ahora no enviamos al exterior. Elegís tu
+          Hacemos envíos a todos los departamentos de Uruguay{carrier ? <> a través de <strong>{carrier}</strong></> : null}. Por ahora no enviamos al exterior. Elegís tu
           departamento y cargás tu dirección al finalizar la compra.
         </p>
       </Section>
@@ -39,8 +40,9 @@ export default async function ShippingPage() {
         <ul>
           <li>Cuando Mercado Pago aprueba tu pago, te llega por email la confirmación de tu pedido.</li>
           <li>
-            Cuando lo despachamos te enviamos otro email con la empresa de transporte, el código de seguimiento y, si
-            lo tiene, un enlace para seguir el envío.
+            {carrier
+              ? `Cuando lo despachamos con ${carrier} te enviamos otro email con el código de seguimiento y, si lo tiene, un enlace para seguir el envío.`
+              : "Cuando lo despachamos te enviamos otro email con la empresa de transporte, el código de seguimiento y, si lo tiene, un enlace para seguir el envío."}
           </li>
           <li>
             Podés ver el estado de tu pedido en cualquier momento desde el enlace que figura en esos emails.
@@ -53,7 +55,7 @@ export default async function ShippingPage() {
           <p>{legal.deliveryTime}</p>
         ) : (
           <p>
-            El plazo de entrega depende de la empresa de transporte y de tu departamento. Te avisamos por email en
+            El plazo de entrega depende de {carrier ?? "la empresa de transporte"} y de tu departamento. Te avisamos por email en
             cuanto tu pedido sale.
           </p>
         )}
@@ -61,7 +63,7 @@ export default async function ShippingPage() {
 
       <Section title="Tu dirección y tus datos de contacto">
         <p>
-          Revisá bien la dirección, el número de puerta y tu teléfono antes de pagar: los usa la empresa de transporte
+          Revisá bien la dirección, el número de puerta y tu teléfono antes de pagar: los usa {carrier ?? "la empresa de transporte"}{" "}
           para entregarte el pedido. Si te equivocaste en algún dato, escribinos <strong>lo antes posible</strong> a{" "}
           <StoreEmail />. Si el pedido ya salió, no siempre se puede cambiar la dirección.
         </p>

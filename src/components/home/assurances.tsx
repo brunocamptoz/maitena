@@ -1,11 +1,12 @@
 import { Reveal } from "@/components/ui/reveal";
+import { legal } from "@/config/legal";
 
 /** Solo información ya definida: envíos dentro de Uruguay (por DAC) y pago con Mercado Pago. */
 const items = [
   {
     emoji: "📦",
     title: "Envíos a todo Uruguay",
-    text: "Ingresás tu dirección y te despachamos tu pedido por DAC.",
+    text: `Ingresás tu dirección y te despachamos tu pedido${legal.carrier ? ` por ${legal.carrier}` : ""}.`,
   },
   {
     emoji: "💳",

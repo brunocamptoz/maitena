@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
+import { legal } from "@/config/legal";
 import { getCategory } from "@/lib/categories";
 import type { Product } from "@/lib/types";
 
@@ -39,7 +40,7 @@ export function ProductDetails({ product }: { product: Product }) {
         </dl>
       </Item>
       <Item title="Envíos">
-        Enviamos a todo Uruguay. El costo se calcula al finalizar la compra, antes de pagar.{" "}
+        Enviamos a todo Uruguay{legal.carrier ? ` por ${legal.carrier}` : ""}. El costo se calcula al finalizar la compra, antes de pagar.{" "}
         <Link href="/envios" className={link}>
           Más información
         </Link>

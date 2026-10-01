@@ -8,6 +8,8 @@ export const legal = {
   businessName: null as string | null,
   /** RUT, si el negocio está inscripto. */
   rut: null as string | null,
+  /** Empresa de transporte con la que se despachan los pedidos. Si es null, los textos hablan de "la empresa de transporte" en general. */
+  carrier: "DAC" as string | null,
   /** Domicilio legal, tal como debe figurar (la tienda no tiene local abierto al público). */
   address: null as string | null,
   /**

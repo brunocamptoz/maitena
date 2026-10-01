@@ -1,4 +1,6 @@
 import { revalidateTag } from "next/cache";
+import { after } from "next/server";
+import { notifyOrderPaid } from "@/lib/email/service";
 import { serverEnv } from "@/lib/env";
 import { fetchPaymentById, getMercadoPago } from "@/lib/mercadopago/client";
 import { handleWebhook } from "@/lib/mercadopago/webhook";
@@ -24,9 +26,11 @@ export async function POST(request: Request) {
           return fetchPaymentById(mp, id);
         },
         db: createServiceClient(),
-        onPaid: async () => {
+        onPaid: async (orderId) => {
           // El stock cambió: las páginas de productos se refrescan con el próximo pedido de visita.
           revalidateTag("products", { expire: 0 });
+          // Emails (comprador + administrador) después de responder a Mercado Pago; cada uno sale una sola vez.
+          after(() => notifyOrderPaid(orderId));
         },
         log: (level, message, meta) => {
           const line = `[webhook] ${message}`;

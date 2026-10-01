@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { after } from "next/server";
 import { ClearCartOnPaid, OrderPoller, RetryPaymentButton } from "@/components/order/order-helpers";
 import { buttonStyles } from "@/components/ui/button";
+import { notifyOrderPaid } from "@/lib/email/service";
 import { formatPrice } from "@/lib/format";
 import { getMercadoPago, reconcileOrder } from "@/lib/mercadopago/client";
 import { getOrderByToken, type OrderPhase, type OrderView } from "@/lib/orders";
@@ -91,6 +93,12 @@ export default async function OrderPage(props: PageProps<"/pedido/[token]">) {
   const holdsStock = order.phase === "pending" || order.phase === "rejected";
   const until = holdsStock && order.reservedUntil ? time.format(new Date(order.reservedUntil)) : null;
   const done = order.phase === "paid" || order.phase === "shipped" || order.phase === "delivered";
+
+  // Respaldo: si el pedido está pagado y todavía falta algún email, se envía ahora (sin demorar la página).
+  if (done && order.emailsPending) {
+    const orderId = order.id;
+    after(() => notifyOrderPaid(orderId));
+  }
 
   return (
     <div className="mx-auto max-w-4xl px-5 pb-24 pt-12 md:px-10 md:pb-36 md:pt-20">

@@ -1,4 +1,4 @@
-import { LOW_STOCK_THRESHOLD } from "@/config/shop";
+import { LOW_STOCK_THRESHOLD } from "../config/shop.ts";
 
 /**
  * Precio en pesos uruguayos: "$ 1.490".

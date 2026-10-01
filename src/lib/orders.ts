@@ -30,6 +30,8 @@ export type OrderView = {
   orderStatus: string;
   reservedUntil: string | null;
   hasPreference: boolean;
+  /** true si está pagado pero todavía falta enviar algún email (confirmación o aviso a la tienda). */
+  emailsPending: boolean;
   tracking: { company: string | null; number: string | null; url: string | null } | null;
   createdAt: string;
   items: { name: string; quantity: number; unitPrice: number; subtotal: number }[];
@@ -76,7 +78,7 @@ export async function getOrderByToken(token: string): Promise<OrderView | null> 
       "id, order_number, public_token, customer_name, customer_email, shipping_department, shipping_city, " +
         "shipping_address, shipping_door_number, shipping_apartment, subtotal, shipping_cost, total, " +
         "payment_status, order_status, cancel_reason, reserved_until, payment_preference_id, " +
-        "tracking_company, tracking_number, tracking_url, created_at",
+        "tracking_company, tracking_number, tracking_url, created_at, confirmation_email_sent_at, admin_notified_at",
     )
     .eq("public_token", token.toLowerCase())
     .maybeSingle<Record<string, string | number | null>>();
@@ -111,6 +113,7 @@ export async function getOrderByToken(token: string): Promise<OrderView | null> 
     orderStatus: o.order_status as string,
     reservedUntil: (o.reserved_until as string | null) ?? null,
     hasPreference: !!o.payment_preference_id,
+    emailsPending: !o.confirmation_email_sent_at || !o.admin_notified_at,
     tracking: hasTracking
       ? {
           company: (o.tracking_company as string | null) ?? null,

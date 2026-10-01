@@ -21,7 +21,7 @@ Compra: Checkout → Backend → Mercado Pago → Webhook → Backend → Supaba
 | 3 | Carrito (persistente, con panel lateral y página `/carrito`) | ✅ |
 | 4 | Esquema Supabase, RLS, stock | ✅ |
 | 5 | Checkout Uruguay + Mercado Pago + webhook | ✅ código y pruebas · ⏳ falta probar con credenciales reales |
-| 6 | Emails (cliente, admin, tracking) | ⏳ |
+| 6 | Emails (cliente, admin, tracking) | ✅ código y pruebas · ⏳ falta configurar Resend |
 | 7 | Panel `/admin` | ⏳ |
 | 8 | Legales (términos, privacidad, cambios, envíos) | ⏳ |
 | 9 | SEO, accesibilidad, QA y deploy | ⏳ |
@@ -93,6 +93,29 @@ pagos en efectivo (Abitab/RedPagos) y máximo de pedidos sin pagar por email.
 
 **Costos de envío:** mientras no estén cargados el checkout no cobra (así no se regala el envío por olvido).
 Se cargan desde `/admin` (paso 7); hasta entonces, ver [`supabase/README.md`](supabase/README.md).
+
+## Emails (Resend)
+
+Cuando un pedido queda **pagado** salen dos correos, cada uno una sola vez (aunque Mercado Pago repita el aviso):
+confirmación al comprador y "Nueva venta" al administrador. El de **envío con seguimiento** al comprador queda listo
+para usarse desde `/admin` (paso 7). Las plantillas están en `src/lib/email/templates.ts`; en desarrollo se ven en
+`/api/dev/emails/confirmacion`, `/venta` y `/envio`.
+
+**Configurar (una sola vez):**
+
+1. Creá una cuenta gratuita en [resend.com](https://resend.com) y generá una **API Key**.
+2. Cargá en `.env.local` **y en Vercel**: `RESEND_API_KEY`, `EMAIL_FROM` y `ADMIN_NOTIFICATION_EMAIL`
+   (ver `.env.example`). Después, Redeploy.
+
+**Sin dominio propio** (situación actual): Resend solo permite enviar desde `onboarding@resend.dev` y **únicamente a
+tu propio email de cuenta**. Para probar, poné ese mismo email en `ADMIN_NOTIFICATION_EMAIL` y en `EMAIL_REDIRECT_TO`
+(así recibís también el correo del comprador, marcado como prueba).
+
+**Antes de vender de verdad hace falta un dominio** (ej. `maitenajoyas.com.uy`):
+
+1. En Resend → *Domains* → agregá el dominio. Resend te muestra unos registros DNS (**SPF**, **DKIM** y opcionalmente DMARC).
+2. Cargá esos registros en el panel donde compraste el dominio y esperá a que Resend lo marque como *Verified*.
+3. Cambiá `EMAIL_FROM` a `Maitena Joyas <pedidos@tudominio.com>`, **vaciá `EMAIL_REDIRECT_TO`** y hacé Redeploy.
 
 ## Pruebas
 

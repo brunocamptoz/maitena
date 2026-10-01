@@ -6,6 +6,8 @@
 // veces que haga falta: es la prueba de regresión de la base (¿sigue todo cerrado al público?).
 import { createHmac } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
+import { loadOrderForEmail } from "../src/lib/email/load-order.ts";
+import { notifyOrderPaid } from "../src/lib/email/notify.ts";
 import { handleWebhook } from "../src/lib/mercadopago/webhook.ts";
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -276,6 +278,34 @@ async function main() {
 
     res = await hook(sign(paymentId, "r4"), { fetchPayment: async () => null });
     ok("un pago que Mercado Pago no conoce se ignora sin error (200)", res.status === 200 && res.body.ignored === "payment_not_found");
+
+    // Emails (con un "Resend" simulado: no se envía nada de verdad)
+    const sentMails = [];
+    const emailDeps = (over = {}) => ({
+      db: svc,
+      loadOrder: (id) => loadOrderForEmail(svc, id),
+      mailer: async (m) => (sentMails.push(m), { ok: true, id: "simulado" }),
+      ctx: { siteName: "Maitena Joyas", siteUrl: "https://tienda.example", contact: { email: null, whatsapp: null, instagram: null } },
+      adminEmail: "admin@example.com",
+      ...over,
+    });
+    const [e1, e2, e3] = await Promise.all([1, 2, 3].map(() => notifyOrderPaid(wo.data.order_id, emailDeps())));
+    const outcomes = [e1, e2, e3].flatMap((r) => [r.confirmation, r.admin]);
+    ok("3 avisos simultáneos de 'pagado': cada email sale UNA sola vez", sentMails.length === 2 && outcomes.filter((o) => o === "sent").length === 2, JSON.stringify(outcomes));
+    ok("…el comprador y el administrador reciben cada uno el suyo", sentMails.some((m) => m.to === "check+60@example.com") && sentMails.some((m) => m.to === "admin@example.com"));
+    const marks = await order(wo.data.order_id);
+    ok("…y quedan registradas las marcas de envío en el pedido", !!marks.confirmation_email_sent_at && !!marks.admin_notified_at);
+    const again = await notifyOrderPaid(wo.data.order_id, emailDeps());
+    ok("repetir no vuelve a enviar", again.confirmation === "already_sent" && again.admin === "already_sent" && sentMails.length === 2);
+    await svc.rpc("unclaim_order_email", { p_order_id: wo.data.order_id, p_kind: "confirmation" });
+    const failing = await notifyOrderPaid(wo.data.order_id, emailDeps({ mailer: async () => ({ ok: false, error: "caído" }) }));
+    const afterFail = await order(wo.data.order_id);
+    ok("si el envío falla se libera la marca para reintentar", failing.confirmation === "failed" && afterFail.confirmation_email_sent_at === null);
+    const retried = await notifyOrderPaid(wo.data.order_id, emailDeps());
+    ok("…y el reintento lo envía", retried.confirmation === "sent" && sentMails.length === 3);
+    const unpaid = await mkOrder(await mkProduct("email-sin-pagar", 1), 1, 61);
+    const blocked = await notifyOrderPaid(unpaid.data.order_id, emailDeps());
+    ok("un pedido SIN pagar no recibe email de confirmación", blocked.confirmation === "order_not_ready" && sentMails.length === 3);
   }
 
   console.log("\n9. Recordatorios de configuración (no son fallas)");

@@ -21,7 +21,7 @@ export function Header() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-40 bg-ink text-paper">
+    <header className="bg-ink text-paper">
       <div className="mx-auto grid h-16 max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-5 md:h-20 md:px-10">
         {/* Izquierda */}
         <div className="flex items-center">

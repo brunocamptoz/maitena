@@ -98,7 +98,7 @@ export default async function ProductPage(props: PageProps<"/productos/[slug]">)
       <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-x-20 xl:gap-x-28">
         <ProductGallery images={product.images} name={product.name} category={product.category} />
 
-        <div className="lg:sticky lg:top-28 lg:self-start">
+        <div className="lg:sticky lg:top-36 lg:self-start">
           <Link
             href={`/categoria/${product.category}`}
             className="text-[11px] uppercase tracking-[0.4em] text-stone transition-colors hover:text-ink"

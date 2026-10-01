@@ -225,7 +225,7 @@ export function CheckoutForm() {
 
       <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)] lg:gap-24">
         {/* Resumen: colapsable arriba en mobile, columna fija en desktop */}
-        <div className="lg:sticky lg:top-28 lg:order-2">
+        <div className="lg:sticky lg:top-36 lg:order-2">
           <details className="group border border-line lg:hidden">
             <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4 [&::-webkit-details-marker]:hidden">
               <span className="text-[11px] uppercase tracking-[0.24em]">Resumen del pedido</span>

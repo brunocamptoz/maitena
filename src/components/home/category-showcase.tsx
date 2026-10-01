@@ -82,7 +82,7 @@ export function CategoryShowcase() {
   return (
     <section
       id="categorias"
-      className="mx-auto max-w-7xl scroll-mt-16 px-5 py-24 md:px-10 md:py-36"
+      className="mx-auto max-w-7xl scroll-mt-32 px-5 py-24 md:px-10 md:py-36"
     >
       <Reveal className="mb-14 flex items-end justify-between gap-6 md:mb-20">
         <div>

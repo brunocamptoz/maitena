@@ -42,7 +42,7 @@ export function CartPageView() {
       </ul>
       <aside
         aria-label="Resumen del pedido"
-        className="border border-line p-6 md:p-8 lg:sticky lg:top-28"
+        className="border border-line p-6 md:p-8 lg:sticky lg:top-36"
       >
         <h2 className="mb-6 font-serif text-2xl font-light">Resumen</h2>
         <CartSummary />

@@ -8,8 +8,11 @@ import { ShippingBanner } from "@/components/layout/shipping-banner";
 export default function ShopLayout({ children }: LayoutProps<"/">) {
   return (
     <>
-      <ShippingBanner />
-      <Header />
+      {/* Cartel y encabezado se quedan fijos juntos al hacer scroll. */}
+      <div className="sticky top-0 z-40">
+        <ShippingBanner />
+        <Header />
+      </div>
       <main id="contenido" className="flex-1">
         {children}
       </main>

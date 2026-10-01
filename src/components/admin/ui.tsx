@@ -34,6 +34,16 @@ export function SectionTitle({ children, aside }: { children: ReactNode; aside?:
   );
 }
 
+export function StatCard({ label, value, hint }: { label: string; value: ReactNode; hint?: string }) {
+  return (
+    <div className="border border-line bg-white/40 p-5">
+      <p className="text-[10px] uppercase tracking-[0.22em] text-stone">{label}</p>
+      <p className="mt-3 font-serif text-3xl font-light leading-none tabular-nums md:text-4xl">{value}</p>
+      {hint && <p className="mt-2 text-xs text-stone">{hint}</p>}
+    </div>
+  );
+}
+
 const badgeTone = {
   neutral: "border-ink/25 text-ink",
   solid: "border-ink bg-ink text-paper",

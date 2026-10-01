@@ -42,5 +42,22 @@ const dateTime = new Intl.DateTimeFormat("es-UY", {
 });
 const dateLong = new Intl.DateTimeFormat("es-UY", { dateStyle: "long", timeStyle: "short", timeZone: tz });
 
-export const formatDateTime = (iso: string | null | undefined) => (iso ? dateTime.format(new Date(iso)) : "—");
+const saleParts = new Intl.DateTimeFormat("en-GB", {
+  timeZone: tz,
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+});
+
+/** Fecha y hora de una compra en hora de Montevideo: { date: "30/09/2026", time: "19:18" }. */
+export function formatSaleDate(iso: string | null | undefined) {
+  if (!iso) return { date: "—", time: "" };
+  const p = Object.fromEntries(saleParts.formatToParts(new Date(iso)).map((x) => [x.type, x.value]));
+  return { date: `${p.day}/${p.month}/${p.year}`, time: `${p.hour}:${p.minute}` };
+}
+
+export const formatDateTime =(iso: string | null | undefined) => (iso ? dateTime.format(new Date(iso)) : "—");
 export const formatDateLong = (iso: string | null | undefined) => (iso ? dateLong.format(new Date(iso)) : "—");

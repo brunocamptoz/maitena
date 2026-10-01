@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ExternalLink, Gem, LogOut, ShoppingBag, Truck } from "lucide-react";
+import { ExternalLink, Gem, LogOut, ShoppingBag, Truck, Wallet } from "lucide-react";
 import { signOutAction } from "@/app/admin/actions";
 import { cn } from "@/lib/cn";
 
 const items = [
   { href: "/admin/pedidos", label: "Pedidos", icon: ShoppingBag, badge: true },
+  { href: "/admin/ventas", label: "Ventas", icon: Wallet, badge: false },
   { href: "/admin/productos", label: "Productos", icon: Gem, badge: false },
   { href: "/admin/configuracion", label: "Envíos", icon: Truck, badge: false },
 ];

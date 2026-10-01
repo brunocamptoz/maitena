@@ -1,7 +1,8 @@
+import { extractFees, feeFields, type FeeSource } from "./fees.ts";
 import { mapPaymentStatus } from "./status.ts";
 
 /** Lo mínimo que se usa de un pago de Mercado Pago (ya consultado a su API, no lo que llegó por HTTP). */
-export type MpPayment = {
+export type MpPayment = FeeSource & {
   id?: string | number;
   status?: string;
   status_detail?: string;
@@ -74,6 +75,8 @@ export async function processPayment(db: Db, payment: MpPayment): Promise<Proces
       currency_id: payment.currency_id ?? null,
       date_approved: payment.date_approved ?? null,
       live_mode: payment.live_mode ?? null,
+      // Comisión de Mercado Pago (solo importes): alimenta la sección Ventas del panel.
+      ...feeFields(extractFees(payment)),
     },
   });
 

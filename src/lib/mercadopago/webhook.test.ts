@@ -228,4 +228,30 @@ describe("webhook de Mercado Pago", () => {
       assert.ok(!raw.includes(leak), `no debe guardarse: ${leak}`);
     }
   });
+
+  it("guarda la comisión y el neto que informa Mercado Pago (solo importes) para la sección Ventas", async () => {
+    const { deps, calls } = makeDeps({
+      payment: {
+        id: 6, status: "approved", external_reference: ORDER_ID, transaction_amount: 1000, currency_id: "UYU",
+        payment_method_id: "debvisa", payment_type_id: "debit_card",
+        fee_details: [{ amount: 60, fee_payer: "collector", type: "mercadopago_fee" }],
+        transaction_details: { net_received_amount: 940 },
+      },
+    });
+    await handleWebhook(signed("6"), deps);
+    const raw = calls[0].args.p_raw as Record<string, unknown>;
+    assert.equal(raw.fee_amount, 60);
+    assert.equal(raw.net_received_amount, 940);
+    // Se guardan los dos importes, no los objetos completos de Mercado Pago.
+    assert.ok(!("fee_details" in raw) && !("transaction_details" in raw));
+  });
+
+  it("si Mercado Pago no informó comisión no se guarda ninguna (queda 'pendiente', no se inventa un 0)", async () => {
+    const { deps, calls } = makeDeps({
+      payment: { id: 7, status: "approved", external_reference: ORDER_ID, transaction_amount: 1000, currency_id: "UYU" },
+    });
+    await handleWebhook(signed("7"), deps);
+    const raw = calls[0].args.p_raw as Record<string, unknown>;
+    assert.ok(!("fee_amount" in raw) && !("net_received_amount" in raw));
+  });
 });

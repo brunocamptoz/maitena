@@ -10,6 +10,18 @@ export function formatPrice(amount: number) {
   return `${sign}$ ${String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
 }
 
+/**
+ * Importe con centavos solo cuando hacen falta: "$ 1.490" o "$ 0,94" (comisiones y netos de Mercado Pago).
+ * Formateo manual por la misma razón que `formatPrice`.
+ */
+export function formatMoney(amount: number) {
+  const cents = Math.round(Math.abs(amount) * 100);
+  const sign = amount < 0 && cents > 0 ? "-" : "";
+  const whole = String(Math.floor(cents / 100)).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  const frac = cents % 100;
+  return `${sign}$ ${whole}${frac === 0 ? "" : `,${String(frac).padStart(2, "0")}`}`;
+}
+
 export type Availability = "in_stock" | "low_stock" | "sold_out";
 
 export function getAvailability(stock: number): Availability {

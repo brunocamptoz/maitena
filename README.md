@@ -103,6 +103,10 @@ Entrar en `/admin` (no aparece en la tienda ni en buscadores). Secciones:
   enlace a WhatsApp), dirección, pagos, historial y notas internas. Acciones: **Agregar tracking**
   (guarda empresa/código/enlace, pasa a *Enviado* y avisa al cliente por email, una sola vez), *Marcar entregado*,
   *Cancelar* (con opción de devolver el stock) y reenviar emails. Etapas: pago pendiente → pago confirmado → enviado → entregado.
+- **Ventas:** registro de lo cobrado por mes (tira de meses que se desliza, con flechas). Cada venta muestra fecha y hora
+  del pago, monto, comisión de Mercado Pago y monto neto, más los totales del mes. La comisión **no se calcula con un
+  porcentaje**: es la que informa Mercado Pago en cada cobro (`fee_details` / `net_received_amount`). Los pagos nuevos la
+  guardan desde el webhook; los anteriores la piden a Mercado Pago al abrir el mes. Los pedidos cancelados no suman.
 - **Productos:** crear/editar (nombre, dirección web automática, descripción, categoría, precio, stock), publicar u ocultar,
   fotos múltiples (principal, orden, reemplazar, borrar), archivar y borrar (solo si nunca se vendió).
 - **Envíos:** costo general, por departamento y envío gratis desde un monto. Mientras no se guarden, la tienda no cobra.

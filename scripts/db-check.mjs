@@ -242,6 +242,8 @@ async function main() {
         currency_id: "UYU",
         payment_method_id: "visa",
         payment_type_id: "credit_card",
+        fee_details: [{ amount: 6, fee_payer: "collector", type: "mercadopago_fee" }],
+        transaction_details: { net_received_amount: wo.data.total - 6 },
       }),
       ...over,
     });
@@ -275,6 +277,9 @@ async function main() {
     ok("un solo registro de pago, con monto y metadatos mínimos",
       pays?.length === 1 && Number(pays[0].amount) === wo.data.total && !JSON.stringify(pays[0].raw).includes("payer"),
       JSON.stringify(pays));
+    ok("…con la comisión y el neto de Mercado Pago (para la sección Ventas)",
+      pays?.[0]?.raw?.fee_amount === 6 && pays?.[0]?.raw?.net_received_amount === wo.data.total - 6,
+      JSON.stringify(pays?.[0]?.raw));
 
     res = await hook(sign(paymentId, "r4"), { fetchPayment: async () => null });
     ok("un pago que Mercado Pago no conoce se ignora sin error (200)", res.status === 200 && res.body.ignored === "payment_not_found");

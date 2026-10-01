@@ -40,7 +40,9 @@ export function ProductDetails({ product }: { product: Product }) {
         </dl>
       </Item>
       <Item title="Envíos">
-        Enviamos a todo Uruguay{legal.carrier ? ` por ${legal.carrier}` : ""}. El costo se calcula al finalizar la compra, antes de pagar.{" "}
+        Enviamos a todo Uruguay{legal.carrier ? ` por ${legal.carrier}` : ""}
+        {legal.deliveryTime ? `, con un plazo de entrega de ${legal.deliveryTime}` : ""}. El costo se calcula al
+        finalizar la compra, antes de pagar.{" "}
         <Link href="/envios" className={link}>
           Más información
         </Link>

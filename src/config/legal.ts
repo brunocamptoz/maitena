@@ -13,10 +13,10 @@ export const legal = {
   /** Domicilio legal, tal como debe figurar (la tienda no tiene local abierto al público). */
   address: null as string | null,
   /**
-   * Plazo habitual de entrega, en texto libre (ej.: "2 a 5 días hábiles desde que despachamos").
+   * Plazo de entrega, como frase corta que completa "El plazo de entrega es de …" (ej.: "3 a 10 días hábiles").
    * Mientras sea null la página de envíos explica el proceso sin prometer un plazo.
    */
-  deliveryTime: null as string | null,
+  deliveryTime: "3 a 10 días hábiles" as string | null,
   /**
    * Política propia de cambios, en texto libre (ej.: cambios por talle dentro de X días). Es ADICIONAL a los
    * derechos que da la ley. Mientras sea null se invita a escribir para coordinar un cambio.

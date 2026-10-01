@@ -1,6 +1,22 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
+/**
+ * Títulos en serif con los números en la fuente sans: la serif dibuja cifras "de texto" que se leen como
+ * letras (el 1 parece una I). Ej.: "Pedido #1036", "Sin ventas en septiembre 2026".
+ */
+function SansDigits({ children }: { children: string }) {
+  return children.split(/(#?\d+(?:[.,]\d+)*)/).map((part, i) =>
+    i % 2 === 1 ? (
+      <span key={i} className="font-sans">
+        {part}
+      </span>
+    ) : (
+      part
+    ),
+  );
+}
+
 export function PageHeader({
   title,
   description,
@@ -13,7 +29,9 @@ export function PageHeader({
   return (
     <header className="mb-8 flex flex-wrap items-end justify-between gap-4 md:mb-10">
       <div>
-        <h1 className="font-serif text-4xl font-light leading-none md:text-5xl">{title}</h1>
+        <h1 className="font-serif text-4xl font-light leading-none md:text-5xl">
+          <SansDigits>{title}</SansDigits>
+        </h1>
         {description && <p className="mt-3 max-w-xl text-sm text-stone">{description}</p>}
       </div>
       {actions && <div className="flex flex-wrap items-center gap-3">{actions}</div>}
@@ -83,7 +101,9 @@ export function Notice({ children, tone = "info" }: { children: ReactNode; tone?
 export function EmptyState({ title, children }: { title: string; children?: ReactNode }) {
   return (
     <div className="border border-dashed border-line px-6 py-14 text-center">
-      <p className="font-serif text-2xl font-light">{title}</p>
+      <p className="font-serif text-2xl font-light">
+        <SansDigits>{title}</SansDigits>
+      </p>
       {children && <div className="mx-auto mt-3 max-w-sm text-sm text-stone">{children}</div>}
     </div>
   );

@@ -14,7 +14,7 @@ export const site = {
   shortName: "Maitena",
   tagline: "Joyas y accesorios de plata",
   description:
-    "Maitena Joyas: anillos, pulseras, cadenas y aros de plata. Envíos a todo Uruguay.",
+    "Maitena Joyas: anillos, pulseras, cadenas, aros y dijes de plata. Envíos a todo Uruguay.",
   url: siteUrl,
   currency: "UYU",
   locale: "es_UY",
@@ -33,4 +33,5 @@ export const nav = [
   { href: "/categoria/pulseras", label: "Pulseras" },
   { href: "/categoria/cadenas", label: "Cadenas" },
   { href: "/categoria/aros", label: "Aros" },
+  { href: "/categoria/dijes", label: "Dijes" },
 ] as const;

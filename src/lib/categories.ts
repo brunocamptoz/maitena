@@ -1,4 +1,4 @@
-export const CATEGORY_SLUGS = ["anillos", "pulseras", "cadenas", "aros"] as const;
+export const CATEGORY_SLUGS = ["anillos", "pulseras", "cadenas", "aros", "dijes"] as const;
 export type CategorySlug = (typeof CATEGORY_SLUGS)[number];
 
 export type Category = {
@@ -13,6 +13,7 @@ export const categories: Category[] = [
   { slug: "pulseras", name: "Pulseras", image: null },
   { slug: "cadenas", name: "Cadenas", image: null },
   { slug: "aros", name: "Aros", image: null },
+  { slug: "dijes", name: "Dijes", image: null },
 ];
 
 export function getCategory(slug: string) {

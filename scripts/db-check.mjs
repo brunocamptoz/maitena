@@ -99,6 +99,8 @@ async function main() {
     const { error } = await svc.from(t).select("*", { head: true, count: "exact" }).limit(1);
     ok(`existe la tabla ${t}`, !error, error?.message);
   }
+  const cats = await svc.from("products").select("id", { head: true, count: "exact" }).eq("category", "dijes");
+  ok("la categoría 'dijes' existe en la base (migración 20261001000000)", !cats.error, cats.error?.message);
   const { data: deps } = await svc.from("departments").select("name");
   ok("están los 19 departamentos", deps?.length === 19, String(deps?.length));
   const bucket = await svc.storage.getBucket("product-images");

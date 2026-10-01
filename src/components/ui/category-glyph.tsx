@@ -48,6 +48,15 @@ export function CategoryGlyph({
           <path d="M70 61v8M66 69h8" />
         </g>
       )}
+      {slug === "dijes" && (
+        <g {...p}>
+          <circle cx="50" cy="14" r="6" />
+          <circle cx="50" cy="14" r="3.8" />
+          <path d="M50 20v7" />
+          <path d="M50 27c13 13 24 21 24 37a24 24 0 0 1-48 0c0-16 11-24 24-37z" />
+          <path d="M50 40c8 8 15 14 15 24a15 15 0 0 1-30 0c0-10 7-16 15-24z" />
+        </g>
+      )}
     </svg>
   );
 }

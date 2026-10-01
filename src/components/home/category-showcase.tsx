@@ -14,6 +14,8 @@ const layout = [
   "md:col-span-5 md:aspect-[4/5] md:mt-24",
   "md:col-span-5 md:aspect-[4/5] md:-mt-10",
   "md:col-span-7 md:aspect-[4/3] md:mt-14",
+  // La quinta cierra la composición como una tira de ancho completo.
+  "md:col-span-12 md:aspect-[21/9] md:mt-4",
 ];
 
 const tone = [
@@ -21,7 +23,10 @@ const tone = [
   "from-[#dcd8d1] to-[#f1eee9] text-ink",
   "from-[#ece8e1] to-[#cfcbc3] text-ink",
   "from-[#2a2826] to-[#0f0f0e]",
+  "from-[#34312d] to-[#14130f]",
 ];
+
+const COUNT_WORDS = ["Una", "Dos", "Tres", "Cuatro", "Cinco", "Seis", "Siete", "Ocho"];
 
 function Card({ category, index }: { category: Category; index: number }) {
   const light = index === 1 || index === 2;
@@ -90,7 +95,7 @@ export function CategoryShowcase() {
             Colección
           </p>
           <h2 className="mt-4 font-serif text-4xl font-light leading-tight md:text-6xl">
-            Cuatro maneras <br className="hidden md:block" />
+            {COUNT_WORDS[categories.length - 1] ?? categories.length} maneras <br className="hidden md:block" />
             de llevar plata
           </h2>
         </div>

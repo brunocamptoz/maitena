@@ -2,7 +2,7 @@ import Link from "next/link";
 import { categories, type CategorySlug } from "@/lib/categories";
 import { cn } from "@/lib/cn";
 
-/** Navegación entre categorías (Todo · Anillos · Pulseras · Cadenas · Aros). */
+/** Navegación entre categorías (Todo + todas las de `categories`). */
 export function CategoryNav({ active }: { active: CategorySlug | null }) {
   const items = [
     { href: "/catalogo", label: "Todo", current: active === null },

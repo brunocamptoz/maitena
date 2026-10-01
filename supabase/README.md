@@ -3,6 +3,7 @@
 | Archivo | Qué hace |
 | --- | --- |
 | `migrations/20260929000000_init_schema.sql` | Tablas, seguridad (RLS), funciones de stock/pedidos/pagos y bucket de fotos |
+| `migrations/20261001000000_add_dijes_category.sql` | Agrega la categoría **dijes** (hay que correrla en el SQL Editor antes de usarla) |
 | `seed.sql` | 12 productos de demostración (se borran desde `/admin`) |
 
 La base solo se modifica con archivos de `migrations/` (nunca a mano desde el panel de Supabase), así el

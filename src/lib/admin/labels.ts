@@ -30,6 +30,7 @@ export const CATEGORY_LABEL: Record<string, string> = {
   pulseras: "Pulseras",
   cadenas: "Cadenas",
   aros: "Aros",
+  dijes: "Dijes",
 };
 
 const tz = "America/Montevideo";

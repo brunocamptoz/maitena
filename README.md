@@ -98,12 +98,12 @@ Se cargan desde `/admin` → **Envíos** (costo general, costo por departamento 
 
 Entrar en `/admin` (no aparece en la tienda ni en buscadores). Secciones:
 
-- **Resumen:** pedidos nuevos / preparando / enviados / con pago pendiente, ventas de 7 y 30 días, poco stock y
+- **Resumen:** pedidos nuevos / enviados / con pago pendiente, ventas de 7 y 30 días, poco stock y
   agotados, pedidos que requieren atención (cobro duplicado, monto distinto…) y avisos de configuración pendiente.
 - **Pedidos:** lista con filtros por estado y búsqueda (n.º, nombre o email). En cada pedido: productos, cliente (con
-  enlace a WhatsApp), dirección, pagos, historial y notas internas. Acciones: *Empezar a preparar*, **Agregar tracking**
+  enlace a WhatsApp), dirección, pagos, historial y notas internas. Acciones: **Agregar tracking**
   (guarda empresa/código/enlace, pasa a *Enviado* y avisa al cliente por email, una sola vez), *Marcar entregado*,
-  *Cancelar* (con opción de devolver el stock) y reenviar emails.
+  *Cancelar* (con opción de devolver el stock) y reenviar emails. Etapas: pago pendiente → pago confirmado → enviado → entregado.
 - **Productos:** crear/editar (nombre, dirección web automática, descripción, categoría, precio, stock), publicar u ocultar,
   fotos múltiples (principal, orden, reemplazar, borrar), archivar y borrar (solo si nunca se vendió).
 - **Envíos:** costo general, por departamento y envío gratis desde un monto. Mientras no se guarden, la tienda no cobra.

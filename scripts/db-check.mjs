@@ -320,20 +320,20 @@ async function main() {
     const guarded = (from, patch) =>
       svc.from("orders").update(patch).eq("id", paidOrder.data.order_id).in("order_status", from).select("id");
 
-    let step = await guarded(["paid"], { order_status: "preparing" });
-    ok("pagado → preparando", step.data?.length === 1, JSON.stringify(step.error));
-    step = await guarded(["paid"], { order_status: "preparing" });
-    ok("repetir la misma transición (doble clic) no hace nada", step.data?.length === 0);
-    step = await guarded(["paid", "preparing"], {
+    const ship = {
       order_status: "shipped",
       tracking_company: "DAC",
       tracking_number: "ZZ123",
       tracking_url: "https://example.com/seguimiento",
-    });
+    };
+    let step = await guarded(["paid", "preparing"], ship);
     const shipped = await order(paidOrder.data.order_id);
-    ok("preparando → enviado con seguimiento y fecha de envío", step.data?.length === 1 && shipped.order_status === "shipped" && !!shipped.shipped_at && shipped.tracking_number === "ZZ123", JSON.stringify(step.error));
-    step = await guarded(["paid", "preparing"], { order_status: "shipped" });
-    ok("un pedido ya enviado no se vuelve a despachar", step.data?.length === 0);
+    ok("pago confirmado → enviado con seguimiento y fecha de envío", step.data?.length === 1 && shipped.order_status === "shipped" && !!shipped.shipped_at && shipped.tracking_number === "ZZ123", JSON.stringify(step.error));
+    step = await guarded(["paid", "preparing"], ship);
+    ok("un pedido ya enviado no se vuelve a despachar (doble clic)", step.data?.length === 0);
+    step = await guarded(["shipped"], { order_status: "delivered" });
+    const delivered = await order(paidOrder.data.order_id);
+    ok("enviado → entregado con fecha de entrega", step.data?.length === 1 && delivered.order_status === "delivered" && !!delivered.delivered_at, JSON.stringify(step.error));
 
     const cancelPaid = await mkOrder(ap, 1, 72);
     await pay(cancelPaid.data.order_id, "adm2", "approved", cancelPaid.data.total);

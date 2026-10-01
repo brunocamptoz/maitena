@@ -18,10 +18,9 @@ export default async function DashboardPage() {
     db.from("orders").select("id", { count: "exact", head: true }).eq("order_status", status);
   const since30 = daysAgoIso(30);
 
-  const [awaiting, paid, preparing, shipped, products, sales, recent, attention, settings, rates] = await Promise.all([
+  const [awaiting, paid, shipped, products, sales, recent, attention, settings, rates] = await Promise.all([
     count("awaiting_payment"),
     count("paid"),
-    count("preparing"),
     count("shipped"),
     db.from("products").select("id, name, stock, stock_reserved, active, archived_at, is_demo"),
     db
@@ -106,9 +105,8 @@ export default async function DashboardPage() {
         </Card>
       )}
 
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-        <StatCard label="Nuevos (para preparar)" value={paid.count ?? 0} tone={(paid.count ?? 0) > 0 ? "alert" : undefined} />
-        <StatCard label="Preparando" value={preparing.count ?? 0} />
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
+        <StatCard label="Nuevos (para enviar)" value={paid.count ?? 0} tone={(paid.count ?? 0) > 0 ? "alert" : undefined} />
         <StatCard label="Enviados" value={shipped.count ?? 0} />
         <StatCard label="Pago pendiente" value={awaiting.count ?? 0} hint="Carritos sin pagar todavía" />
       </div>

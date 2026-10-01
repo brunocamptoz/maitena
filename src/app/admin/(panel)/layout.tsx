@@ -4,7 +4,7 @@ import { requireAdmin } from "@/lib/admin/auth";
 export default async function PanelLayout({ children }: { children: React.ReactNode }) {
   const { user, db } = await requireAdmin();
 
-  // Pedidos pagados que todavía no se empezaron a preparar: el "tenés trabajo" del menú.
+  // Pedidos pagados que todavía no se enviaron: el "tenés trabajo" del menú.
   const { count } = await db.from("orders").select("id", { count: "exact", head: true }).eq("order_status", "paid");
 
   return (

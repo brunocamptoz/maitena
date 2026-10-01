@@ -14,7 +14,6 @@ const PAGE_SIZE = 25;
 const TABS = [
   { key: "todos", label: "Todos", status: null },
   { key: "nuevos", label: "Nuevos", status: "paid" },
-  { key: "preparando", label: "Preparando", status: "preparing" },
   { key: "enviados", label: "Enviados", status: "shipped" },
   { key: "entregados", label: "Entregados", status: "delivered" },
   { key: "pendientes", label: "Pago pendiente", status: "awaiting_payment" },

@@ -4,9 +4,10 @@ import { z } from "zod";
 
 export type OrderStatus = "awaiting_payment" | "paid" | "preparing" | "shipped" | "delivered" | "cancelled";
 
-/** "Pago confirmado" → empezar a preparar. */
-export const canPrepare = (s: string) => s === "paid";
-/** Se puede despachar (cargar seguimiento) un pedido pagado, ya sea recién llegado o en preparación. */
+/**
+ * Se puede despachar (cargar seguimiento) un pedido con el pago confirmado. El panel ya no tiene la etapa
+ * "Preparando"; `preparing` se sigue aceptando solo para no dejar trabado un pedido que haya quedado así.
+ */
 export const canShip = (s: string) => s === "paid" || s === "preparing";
 export const canDeliver = (s: string) => s === "shipped";
 /**

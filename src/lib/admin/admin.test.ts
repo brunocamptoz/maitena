@@ -4,7 +4,6 @@ import {
   canCancel,
   canDeliver,
   canEditTracking,
-  canPrepare,
   canShip,
   eventLabel,
   trackingSchema,
@@ -116,13 +115,7 @@ describe("validateImageFile", () => {
 });
 
 describe("reglas del flujo de pedidos", () => {
-  it("solo se prepara un pedido recién pagado", () => {
-    assert.equal(canPrepare("paid"), true);
-    for (const s of ["awaiting_payment", "preparing", "shipped", "delivered", "cancelled"]) {
-      assert.equal(canPrepare(s), false, s);
-    }
-  });
-  it("se despacha desde pagado o preparando, nunca sin pago", () => {
+  it("se despacha desde pago confirmado (y desde el viejo 'preparando'), nunca sin pago", () => {
     assert.equal(canShip("paid"), true);
     assert.equal(canShip("preparing"), true);
     for (const s of ["awaiting_payment", "shipped", "delivered", "cancelled"]) assert.equal(canShip(s), false, s);

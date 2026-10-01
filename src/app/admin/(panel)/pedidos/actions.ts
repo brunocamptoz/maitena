@@ -48,19 +48,6 @@ async function transition(
   return true;
 }
 
-export async function markPreparing(orderId: string): Promise<OrderActionResult> {
-  const { user } = await requireAdminAction();
-  if (!uuid.safeParse(orderId).success) return BAD_ID;
-  try {
-    const done = await transition(orderId, user.id, ["paid"], { order_status: "preparing" }, { type: "preparing" });
-    if (!done) return STALE;
-  } catch (e) {
-    return { error: (e as Error).message };
-  }
-  refresh(orderId);
-  return { ok: true, message: "Pedido en preparación." };
-}
-
 export async function markDelivered(orderId: string): Promise<OrderActionResult> {
   const { user } = await requireAdminAction();
   if (!uuid.safeParse(orderId).success) return BAD_ID;

@@ -4,7 +4,6 @@ import { useActionState, useState, useTransition } from "react";
 import {
   cancelOrder,
   markDelivered,
-  markPreparing,
   resendEmail,
   resolveAttention,
   saveOrderNotes,
@@ -13,7 +12,7 @@ import {
   type OrderActionResult,
 } from "@/app/admin/(panel)/pedidos/actions";
 import { buttonStyles } from "@/components/ui/button";
-import { canCancel, canDeliver, canEditTracking, canPrepare, canShip } from "@/lib/admin/order-rules";
+import { canCancel, canDeliver, canEditTracking, canShip } from "@/lib/admin/order-rules";
 import { cn } from "@/lib/cn";
 
 const input =
@@ -59,11 +58,6 @@ export function OrderActions({ orderId, status, paymentApproved, tracking, shipp
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap gap-3">
-        {canPrepare(status) && (
-          <button type="button" disabled={pending} onClick={() => run(() => markPreparing(orderId))} className={buttonStyles({ variant: "outline", size: "md" })}>
-            Empezar a preparar
-          </button>
-        )}
         {canShip(status) && (
           <button type="button" disabled={pending} onClick={() => setShowShip((v) => !v)} aria-expanded={showShip} className={buttonStyles({ size: "md" })}>
             Agregar tracking

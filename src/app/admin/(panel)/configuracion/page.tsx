@@ -29,7 +29,7 @@ export default async function SettingsPage() {
   const s = settings.data;
   return (
     <>
-      <PageHeader title="Envíos" description="Cuánto cobrás de envío. Los envíos son solo dentro de Uruguay." />
+      <PageHeader title="Envíos" />
 
       {!s.shipping_configured && (
         <div className="mb-8">

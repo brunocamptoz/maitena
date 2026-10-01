@@ -14,7 +14,6 @@ export default async function NewProductPage() {
     <>
       <PageHeader
         title="Nuevo producto"
-        description="Primero los datos; las fotos se cargan en el paso siguiente."
         actions={
           <Link href="/admin/productos" className="text-[11px] uppercase tracking-[0.2em] text-stone underline underline-offset-4">
             Volver

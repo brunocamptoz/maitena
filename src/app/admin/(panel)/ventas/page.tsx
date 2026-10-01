@@ -82,7 +82,7 @@ export default async function SalesPage(props: PageProps<"/admin/ventas">) {
 
   return (
     <>
-      <PageHeader title="Ventas" description="Lo cobrado en cada mes, con la comisión de Mercado Pago ya descontada." />
+      <PageHeader title="Ventas" />
 
       <MonthStrip months={months} selected={selected} />
       <FeeSync key={selected} month={selected} pending={pending} />

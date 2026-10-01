@@ -63,7 +63,7 @@ export default async function OrdersPage(props: PageProps<"/admin/pedidos">) {
 
   return (
     <>
-      <PageHeader title="Pedidos" description="Lo que se compró, quién lo compró y en qué estado está." />
+      <PageHeader title="Pedidos" />
 
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <nav aria-label="Filtrar pedidos" className="flex flex-wrap gap-2">

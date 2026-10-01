@@ -45,7 +45,6 @@ export default async function ProductsPage(props: PageProps<"/admin/productos">)
     <>
       <PageHeader
         title="Productos"
-        description="Cargá, editá y ocultá lo que se ve en la tienda."
         actions={
           <Link href="/admin/productos/nuevo" className={buttonStyles({ size: "md" })}>
             <Plus size={14} strokeWidth={1.5} aria-hidden="true" /> Nuevo producto

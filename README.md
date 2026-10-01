@@ -23,7 +23,7 @@ Compra: Checkout → Backend → Mercado Pago → Webhook → Backend → Supaba
 | 5 | Checkout Uruguay + Mercado Pago + webhook | ✅ código y pruebas · ⏳ falta probar con credenciales reales |
 | 6 | Emails (cliente, admin, tracking) | ✅ código y pruebas · ⏳ falta configurar Resend |
 | 7 | Panel `/admin` | ✅ código y pruebas · ⏳ falta crear el usuario admin y probarlo con sesión real |
-| 8 | Legales (términos, privacidad, cambios, envíos) | ⏳ |
+| 8 | Legales (términos, privacidad, cambios y devoluciones, envíos, contacto) | ✅ borradores · ⏳ revisión de un abogado y datos legales del negocio |
 | 9 | SEO, accesibilidad, QA y deploy | ⏳ |
 
 ## Requisitos
@@ -168,7 +168,16 @@ Pendientes que NO se pueden olvidar (marcá cada uno cuando esté hecho):
 - [ ] (Opcional) `ADMIN_NOTIFICATION_EMAIL` → casilla de la tienda; `NEXT_PUBLIC_SITE_URL` → dominio propio en Vercel.
 - [ ] **Costos de envío reales** (hoy en $0 solo para pruebas) y envío gratis si corresponde.
 - [ ] **Productos reales** cargados y productos demo eliminados; Aros Botón vuelve a su precio ($790 de demo) o se borra.
-- [ ] Páginas legales (términos, privacidad, cambios y envíos, contacto) revisadas por un abogado.
+- [ ] **Páginas legales revisadas por un abogado** (`/terminos`, `/privacidad`, `/cambios-y-devoluciones`, `/envios`, `/contacto`).
+      Son borradores basados en la Ley 17.250 (art. 16: arrepentimiento de 5 días hábiles en ventas a distancia) y la Ley 18.331
+      (datos personales); no son asesoramiento legal. Puntos para el abogado: transferencia internacional de datos (Supabase,
+      Vercel y Resend pueden estar fuera de Uruguay), conservación de datos, condiciones de devolución, garantía, y si conviene
+      una casilla obligatoria "Acepto los términos" en el checkout (hoy es un aviso "Al continuar aceptás…").
+- [ ] **Datos legales del negocio** en `src/config/legal.ts` (razón social, RUT, domicilio, plazo de entrega, política propia de
+      cambios). Mientras estén en `null` las páginas no los muestran.
+- [ ] **Inscribir la base de datos de clientes en la URCDP** (Unidad Reguladora y de Control de Datos Personales, Ley 18.331,
+      arts. 28-29): es una obligación de quien guarda datos personales de clientes.
+- [ ] Confirmar si los precios deben mostrarse con IVA incluido (Ley 17.250) según la situación tributaria del negocio.
 - [ ] Reiniciar la numeración de pedidos (ver `supabase/README.md`).
 - [ ] Supabase → Authentication → Sign In / Providers → **desactivar "Allow new users to sign up"** (`npm run db:check` avisa si sigue activo).
 - [ ] WhatsApp de contacto en `src/config/site.ts` (si se quiere mostrar).

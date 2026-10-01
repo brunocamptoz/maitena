@@ -97,12 +97,6 @@ export function Hero() {
       />
 
       <div className="relative mx-auto flex max-w-7xl flex-col items-center px-5 pb-12 pt-8 text-center md:px-10 md:pb-20 md:pt-12 lg:items-stretch lg:pb-24 lg:pt-20 lg:text-left">
-        {/* Brillante (celular y tablet: arriba y centrado, sin tapar el texto) */}
-        <HeroGem
-          fillId="hero-gem-fill-sm"
-          className="animate-float pointer-events-none mx-auto mb-4 w-44 sm:w-56 lg:hidden"
-        />
-
         <p
           className="animate-rise mb-5 flex items-center justify-center gap-4 text-[10px] uppercase tracking-[0.3em] text-paper/60 sm:text-[11px] sm:tracking-[0.4em] lg:mb-6 lg:justify-start"
           style={delay(100)}
@@ -121,8 +115,14 @@ export function Hero() {
           </span>
         </h1>
 
+        {/* Brillante (celular y tablet: en el medio, entre el título y los botones, sin tapar el texto) */}
+        <HeroGem
+          fillId="hero-gem-fill-sm"
+          className="animate-float pointer-events-none mx-auto my-5 w-44 sm:w-56 lg:hidden"
+        />
+
         <div
-          className="animate-rise mt-9 flex flex-col items-center gap-7 lg:mt-16 lg:flex-row lg:items-end lg:justify-between lg:gap-8"
+          className="animate-rise mt-1 flex flex-col items-center gap-7 lg:mt-16 lg:flex-row lg:items-end lg:justify-between lg:gap-8"
           style={delay(450)}
         >
           <p className="max-w-sm font-serif text-2xl font-light italic leading-snug text-paper/85 md:text-3xl">

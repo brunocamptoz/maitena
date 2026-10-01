@@ -50,11 +50,6 @@ export function ProductCard({
           <div className="absolute left-2.5 top-2.5 flex flex-col items-start gap-1.5">
             {soldOut && <span className={tag}>Agotado</span>}
             {!soldOut && product.isNew && <span className={tag}>Nuevo</span>}
-            {product.isDemo && (
-              <span className="bg-ink/80 px-2.5 py-1 text-[9px] uppercase tracking-[0.24em] text-paper">
-                Demo
-              </span>
-            )}
           </div>
         </div>
 

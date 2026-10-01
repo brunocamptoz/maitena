@@ -32,7 +32,6 @@ export type ProductCardData = {
   category: CategorySlug;
   stock: number;
   isNew: boolean;
-  isDemo: boolean;
   /** Primera y segunda fotografía (la segunda se muestra al pasar el mouse). */
   images: ProductImage[];
   /** Orden de publicación (timestamp) para ordenar por novedades. */

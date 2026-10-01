@@ -141,13 +141,6 @@ export default async function ProductPage(props: PageProps<"/productos/[slug]">)
             />
           </div>
 
-          {product.isDemo && (
-            <p className="mt-6 border border-dashed border-stone/40 px-4 py-3 text-xs leading-relaxed text-stone">
-              <strong className="font-medium uppercase tracking-[0.2em] text-ink">Demo</strong>{" "}
-              Producto de demostración. Se elimina desde el panel de administración.
-            </p>
-          )}
-
           <div className="mt-12">
             <ProductDetails product={product} />
           </div>

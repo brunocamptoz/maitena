@@ -50,7 +50,8 @@ solo se usan en el servidor y no llevan prefijo `NEXT_PUBLIC_`.
 ## Productos demo
 
 La base viene con 12 productos de demostración (`supabase/seed.sql`, fotos de ejemplo en `public/demo/`),
-marcados como **Demo** y sin indexar en buscadores. Se eliminan desde `/admin` sin tocar código.
+marcados internamente como demo: la tienda ya no muestra el cartel "Demo", pero siguen sin indexarse en buscadores (ni figuran
+en el sitemap) y en `/admin` llevan la etiqueta **Demo** para reconocerlos. Se eliminan o archivan desde `/admin` sin tocar código.
 
 ## Base de datos
 

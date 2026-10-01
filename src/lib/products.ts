@@ -120,7 +120,6 @@ export function toCardData(p: Product): ProductCardData {
     price: p.price,
     category: p.category,
     stock: p.stock,
-    isDemo: p.isDemo,
     isNew: Date.now() - createdAt < NEW_PRODUCT_DAYS * 86_400_000,
     images: p.images.slice(0, 2),
     createdAt,

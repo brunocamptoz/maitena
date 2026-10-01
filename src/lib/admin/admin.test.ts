@@ -168,31 +168,33 @@ describe("whatsappLink", () => {
 });
 
 describe("parseShippingForm", () => {
-  const depts = ["Montevideo", "Salto"];
   const getter = (values: Record<string, string>) => (name: string) => values[name] ?? "";
 
-  it("lee costo general, envío gratis y tarifas propias", () => {
-    const r = parseShippingForm(getter({ defaultCost: "250", freeFrom: "3000", "rate:Salto": "400" }), depts);
+  it("lee el costo de envío y el envío gratis desde", () => {
+    const r = parseShippingForm(getter({ defaultCost: "250", freeFrom: "3000" }));
     assert.ok(r.ok);
-    assert.deepEqual(r.value, { defaultCost: 250, freeFrom: 3000, rates: { Salto: 400 } });
+    assert.deepEqual(r.value, { defaultCost: 250, freeFrom: 3000 });
   });
-  it("acepta 0 como costo general y sin promoción", () => {
-    const r = parseShippingForm(getter({ defaultCost: "0" }), depts);
+  it("acepta 0 como costo de envío y sin promoción", () => {
+    const r = parseShippingForm(getter({ defaultCost: "0" }));
     assert.ok(r.ok);
-    assert.deepEqual(r.value, { defaultCost: 0, freeFrom: null, rates: {} });
+    assert.deepEqual(r.value, { defaultCost: 0, freeFrom: null });
   });
-  it("exige el costo general y rechaza montos inválidos", () => {
-    const r = parseShippingForm(getter({ defaultCost: "", freeFrom: "0", "rate:Salto": "-3" }), depts);
+  it("exige el costo de envío y rechaza montos inválidos", () => {
+    const r = parseShippingForm(getter({ defaultCost: "", freeFrom: "0" }));
     assert.equal(r.ok, false);
     if (!r.ok) {
       assert.ok(r.errors.defaultCost);
       assert.ok(r.errors.freeFrom);
-      assert.ok(r.errors["rate:Salto"]);
+    }
+    for (const bad of ["-3", "12.5", "1,5", "abc", "99999999"]) {
+      assert.equal(parseShippingForm(getter({ defaultCost: bad })).ok, false, "costo " + bad);
+      assert.equal(parseShippingForm(getter({ defaultCost: "100", freeFrom: bad })).ok, false, "gratis desde " + bad);
     }
   });
-  it("ignora campos de departamentos que no existen", () => {
-    const r = parseShippingForm(getter({ defaultCost: "100", "rate:Narnia": "50" }), depts);
+  it("ignora cualquier otro campo que llegue en el formulario", () => {
+    const r = parseShippingForm(getter({ defaultCost: "100", "rate:Salto": "999" }));
     assert.ok(r.ok);
-    assert.deepEqual(r.value.rates, {});
+    assert.deepEqual(r.value, { defaultCost: 100, freeFrom: null });
   });
 });

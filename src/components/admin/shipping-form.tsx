@@ -12,23 +12,21 @@ const label = "mb-1.5 block text-[10px] uppercase tracking-[0.22em]";
 export type ShippingFormValues = {
   defaultCost: string;
   freeFrom: string;
-  rates: Record<string, string>;
 };
 
-export function ShippingForm({ departments, initial }: { departments: string[]; initial: ShippingFormValues }) {
+export function ShippingForm({ initial }: { initial: ShippingFormValues }) {
   const [state, action, pending] = useActionState<ShippingState, FormData>(saveShipping, {});
   // Controlados: React 19 vacía los campos sin control cuando termina la acción.
   const [defaultCost, setDefaultCost] = useState(initial.defaultCost);
   const [freeFrom, setFreeFrom] = useState(initial.freeFrom);
-  const [rates, setRates] = useState(initial.rates);
   const errors = state.errors ?? {};
 
   return (
-    <form action={action} className="space-y-10" noValidate>
+    <form action={action} className="space-y-8" noValidate>
       <div className="grid max-w-2xl gap-6 sm:grid-cols-2">
         <div>
           <label htmlFor="defaultCost" className={label}>
-            Costo de envío general (UYU)
+            Costo de envío (UYU)
           </label>
           <input
             id="defaultCost"
@@ -42,7 +40,7 @@ export function ShippingForm({ departments, initial }: { departments: string[]; 
             className={input}
           />
           <p id="defaultCost-hint" className={cn("mt-1.5 text-xs", errors.defaultCost ? "text-error" : "text-stone")}>
-            {errors.defaultCost ?? "Se cobra en todos los departamentos que no tengan un costo propio. Poné 0 si el envío es gratis."}
+            {errors.defaultCost ?? "Se cobra en todo el país. Poné 0 si el envío es gratis."}
           </p>
         </div>
         <div>
@@ -66,42 +64,6 @@ export function ShippingForm({ departments, initial }: { departments: string[]; 
           </p>
         </div>
       </div>
-
-      <fieldset>
-        <legend className="mb-1 text-[11px] uppercase tracking-[0.24em]">Costo por departamento</legend>
-        <p className="mb-5 max-w-xl text-sm text-stone">
-          Opcional. Dejá vacío el departamento que use el costo general.
-        </p>
-        <div className="grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
-          {departments.map((dept) => {
-            const key = `rate:${dept}`;
-            return (
-              <div key={dept}>
-                <label htmlFor={key} className="mb-1.5 block text-sm">
-                  {dept}
-                </label>
-                <input
-                  id={key}
-                  name={key}
-                  value={rates[dept] ?? ""}
-                  onChange={(e) => setRates((r) => ({ ...r, [dept]: e.target.value }))}
-                  inputMode="numeric"
-                  autoComplete="off"
-                  placeholder={defaultCost.trim() || "General"}
-                  aria-invalid={!!errors[key]}
-                  aria-describedby={errors[key] ? `${key}-error` : undefined}
-                  className={input}
-                />
-                {errors[key] && (
-                  <p id={`${key}-error`} role="alert" className="mt-1 text-xs text-error">
-                    {errors[key]}
-                  </p>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </fieldset>
 
       <div className="flex flex-wrap items-center gap-4">
         <button type="submit" disabled={pending} className={buttonStyles({ size: "md" })}>

@@ -92,7 +92,7 @@ Reglas de pago en [`src/config/payments.ts`](src/config/payments.ts): modo binar
 pagos en efectivo (Abitab/RedPagos) y máximo de pedidos sin pagar por email.
 
 **Costos de envío:** mientras no estén cargados el checkout no cobra (así no se regala el envío por olvido).
-Se cargan desde `/admin` → **Envíos** (costo general, costo por departamento y envío gratis desde cierto monto).
+Se cargan desde `/admin` → **Envíos** (costo de envío y envío gratis desde cierto monto).
 
 ## Panel de administración (`/admin`)
 
@@ -109,7 +109,7 @@ Entrar en `/admin` (no aparece en la tienda ni en buscadores). Secciones:
   guardan desde el webhook; los anteriores la piden a Mercado Pago al abrir el mes. Los pedidos cancelados no suman.
 - **Productos:** crear/editar (nombre, dirección web automática, descripción, categoría, precio, stock), publicar u ocultar,
   fotos múltiples (principal, orden, reemplazar, borrar), archivar y borrar (solo si nunca se vendió).
-- **Envíos:** costo general, por departamento y envío gratis desde un monto. Mientras no se guarden, la tienda no cobra.
+- **Envíos:** costo de envío (igual para todo el país) y envío gratis desde un monto. Mientras no se guarden, la tienda no cobra.
   Si hay un monto de "envío gratis desde", la tienda muestra arriba de todo un cartel "Envío gratis a partir de $ X" con
   ese valor (se actualiza al guardar; sin monto no hay cartel).
 

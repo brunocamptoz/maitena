@@ -76,7 +76,8 @@ update public.store_settings
        free_shipping_from    = null,      -- o un número, ej. 3000
        shipping_configured   = true;
 
--- Tarifa propia de un departamento (opcional; el resto usa el costo general).
+-- Tarifa propia de un departamento (opcional y avanzado: el panel /admin NO la muestra ni la edita, pero
+-- el checkout la respeta si existe; el resto usa el costo general).
 insert into public.shipping_rates (department, cost) values ('Montevideo', 150)
 on conflict (department) do update set cost = excluded.cost;
 ```
@@ -93,6 +94,6 @@ on conflict (department) do update set cost = excluded.cost;
 ## Pendiente de definir con el negocio
 
 - **Costos de envío:** no están inventados. `store_settings.shipping_configured` arranca en `false`; se cargan
-  desde `/admin` (costo general y por departamento, y envío gratis desde cierto monto).
+  desde `/admin` (costo de envío y envío gratis desde cierto monto).
 - **Medios de pago en efectivo (Abitab, RedPagos):** quedaron excluidos al inicio (`src/config/payments.ts`)
   porque su acreditación demora días y mantendrían el stock reservado. Se pueden habilitar más adelante.

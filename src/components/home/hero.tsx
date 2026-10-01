@@ -14,7 +14,7 @@ export function Hero() {
         className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-1/3 bg-gradient-to-t from-paper/[0.04] to-transparent"
       />
 
-      <div className="mx-auto flex min-h-[calc(100svh-4rem)] max-w-7xl flex-col justify-end px-5 pb-14 pt-24 md:min-h-[calc(100svh-5rem)] md:px-10 md:pb-20">
+      <div className="mx-auto flex max-w-7xl flex-col px-5 pb-16 pt-14 md:px-10 md:pb-24 md:pt-20">
         <p className="mb-6 text-[11px] uppercase tracking-[0.4em] text-paper/60">
           Joyas de plata · Uruguay
         </p>

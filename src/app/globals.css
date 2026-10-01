@@ -121,6 +121,83 @@ body {
   animation: glint 14s ease-in-out infinite;
 }
 
+/* Portada: detalles de movimiento (todo se apaga con prefers-reduced-motion) */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-rise {
+  animation: rise 1100ms var(--ease-soft) both;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+.animate-float {
+  animation: float 10s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-twinkle {
+  animation: twinkle 5s ease-in-out infinite;
+  animation-delay: var(--d, 0ms);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-orbit {
+  animation: orbit 160s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 60s linear infinite;
+}
+.marquee:hover .animate-marquee {
+  animation-play-state: paused;
+}
+
+/* Grano fino sobre fondos oscuros: da textura y profundidad */
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -130,8 +207,16 @@ body {
     transform: none;
     transition: none;
   }
-  .animate-glint {
+  .animate-glint,
+  .animate-rise,
+  .animate-float,
+  .animate-orbit,
+  .animate-marquee {
     animation: none;
+  }
+  .animate-twinkle {
+    animation: none;
+    opacity: 0.8;
   }
   * {
     transition-duration: 0.01ms !important;

@@ -78,7 +78,8 @@ export function Header() {
           "fixed inset-0 z-50 flex flex-col bg-ink px-6 pb-10 pt-5 transition-opacity duration-500 xl:hidden",
           open ? "opacity-100" : "pointer-events-none opacity-0",
         )}
-        aria-hidden={!open}
+        // inert: cerrado, el menú no se puede enfocar con el teclado ni lo leen los lectores de pantalla.
+        inert={!open}
       >
         <div className="flex items-center justify-between">
           <span className="font-serif text-2xl font-light uppercase tracking-[0.32em]">

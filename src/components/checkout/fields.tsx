@@ -2,7 +2,7 @@ import type { ChangeEvent, ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 const control =
-  "w-full border bg-transparent px-4 text-[15px] transition-colors placeholder:text-stone/60 focus:border-ink focus:outline-none";
+  "w-full border bg-transparent px-4 text-[15px] transition-colors placeholder:text-stone focus:border-ink focus:outline-none";
 
 type Common = {
   name: string;
@@ -100,7 +100,7 @@ export function SelectField({
         onChange={(e) => onChange(e.target.value)}
         onBlur={onBlur}
         autoComplete={autoComplete}
-        className={cn(control, "h-12 cursor-pointer", !value && "text-stone/70", common.error ? "border-error" : "border-ink/25")}
+        className={cn(control, "h-12 cursor-pointer", !value && "text-stone", common.error ? "border-error" : "border-ink/25")}
       >
         <option value="">{placeholder}</option>
         {options.map((o) => (

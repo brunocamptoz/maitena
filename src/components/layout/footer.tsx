@@ -13,7 +13,7 @@ const legal = [
 ];
 
 const col = "text-sm text-paper/60 transition-colors hover:text-paper";
-const heading = "mb-5 text-[10px] uppercase tracking-[0.3em] text-paper/40";
+const heading = "mb-5 text-[10px] uppercase tracking-[0.3em] text-paper/55";
 
 export function Footer() {
   const { instagram, whatsapp, email } = site.contact;
@@ -110,7 +110,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col gap-4 border-t border-paper/10 pt-6 text-xs text-paper/40 md:flex-row md:items-center md:justify-between">
+        <div className="mt-16 flex flex-col gap-4 border-t border-paper/10 pt-6 text-xs text-paper/55 md:flex-row md:items-center md:justify-between">
           <p>
             © {new Date().getFullYear()} {site.name}. Todos los derechos reservados.
           </p>

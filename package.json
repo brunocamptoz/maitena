@@ -11,7 +11,8 @@
     "test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test \"src/**/*.test.ts\"",
     "mp:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file=.env.local scripts/mp-check.mjs",
     "webhook:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file=.env.local scripts/webhook-check.mjs",
-    "email:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file=.env.local scripts/email-check.mjs"
+    "email:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file=.env.local scripts/email-check.mjs",
+    "links:check": "node scripts/link-check.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

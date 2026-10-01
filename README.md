@@ -20,11 +20,11 @@ Compra: Checkout → Backend → Mercado Pago → Webhook → Backend → Supaba
 | 2 | Catálogo y página de producto | ✅ |
 | 3 | Carrito (persistente, con panel lateral y página `/carrito`) | ✅ |
 | 4 | Esquema Supabase, RLS, stock | ✅ |
-| 5 | Checkout Uruguay + Mercado Pago + webhook | ✅ código y pruebas · ⏳ falta probar con credenciales reales |
+| 5 | Checkout Uruguay + Mercado Pago + webhook | ✅ verificado con una compra real |
 | 6 | Emails (cliente, admin, tracking) | ✅ código y pruebas · ⏳ falta configurar Resend |
-| 7 | Panel `/admin` | ✅ código y pruebas · ⏳ falta crear el usuario admin y probarlo con sesión real |
+| 7 | Panel `/admin` (pedidos, ventas, productos, envíos) | ✅ |
 | 8 | Legales (términos, privacidad, cambios y devoluciones, envíos, contacto) | ✅ borradores · ⏳ revisión de un abogado y datos legales del negocio |
-| 9 | SEO, accesibilidad, QA y deploy | ⏳ |
+| 9 | SEO, accesibilidad, QA y deploy | ✅ |
 
 ## Requisitos
 
@@ -150,6 +150,7 @@ tu propio email de cuenta**. Para probar, poné ese mismo email en `ADMIN_NOTIFI
 npm test          # firma del webhook, estados de pago, preferencia, validaciones (sin red)
 npm run db:check  # seguridad, stock concurrente y webhook completo contra tu Supabase real
 npm run mp:check  # token de Mercado Pago (país, medios de pago, preferencia); nunca muestra el token
+npm run links:check # rastrea el sitio (npm run build && npx next start -p 3100) o uno publicado: `npm run links:check -- https://tu-sitio.com`
 ```
 
 `mp:check` conviene volver a correrlo al cambiar de credenciales de prueba a las de producción.
@@ -165,7 +166,9 @@ Pendientes que NO se pueden olvidar (marcá cada uno cuando esté hecho):
       (ya está creado en Resend como `maitenajoyas.com`, estado *not_started*) y esperar *Verified*. Sin esto los
       clientes reales NO reciben emails.
 - [ ] Con el dominio verificado: `EMAIL_FROM=Maitena Joyas <pedidos@tudominio>`, **vaciar `EMAIL_REDIRECT_TO`** en Vercel y Redeploy.
-- [ ] (Opcional) `ADMIN_NOTIFICATION_EMAIL` → casilla de la tienda; `NEXT_PUBLIC_SITE_URL` → dominio propio en Vercel.
+- [ ] (Opcional) `ADMIN_NOTIFICATION_EMAIL` → casilla de la tienda.
+- [ ] Con dominio propio: `NEXT_PUBLIC_SITE_URL` → ese dominio en Vercel (lo usan el sitemap, las direcciones canónicas, las vistas previas al compartir y los datos estructurados) y Redeploy.
+- [ ] Cuando haya productos reales: en [Google Search Console](https://search.google.com/search-console) agregar el sitio y enviar `/sitemap.xml`. (Los productos de demostración no se indexan ni aparecen en el sitemap.)
 - [ ] **Costos de envío reales** (hoy en $0 solo para pruebas) y envío gratis si corresponde.
 - [ ] **Productos reales** cargados y productos demo eliminados; Aros Botón vuelve a su precio ($790 de demo) o se borra.
 - [ ] **Páginas legales revisadas por un abogado** (`/terminos`, `/privacidad`, `/cambios-y-devoluciones`, `/envios`, `/contacto`).
@@ -209,3 +212,16 @@ Fotografías de categorías: `src/lib/categories.ts` (campo `image`). Mientras s
 4. Después del primer deploy, configurar el webhook de Mercado Pago (ver arriba) y cargar `MERCADOPAGO_WEBHOOK_SECRET`.
    Las variables nuevas se aplican en el siguiente deploy (*Deployments → Redeploy*).
 5. Cada push a `main` despliega a producción; cada rama o PR genera un preview.
+
+## SEO, accesibilidad y seguridad (resumen del paso 9)
+
+- **SEO:** `/sitemap.xml` (páginas públicas, categorías con productos y productos reales; sin demos) y `/robots.txt` (bloquea panel,
+  API, carrito, checkout y seguimiento de pedidos; los despliegues de prueba de Vercel no se indexan). Direcciones canónicas,
+  etiquetas para compartir (imagen `1200×630` con el logo), datos estructurados `Organization`/`WebSite` en la portada y
+  `Product` en cada producto, y manifest para agregar el sitio al teléfono.
+- **Accesibilidad:** enlace "Saltar al contenido", menú del celular que no se puede enfocar cuando está cerrado, contraste de
+  color AA en textos grises y placeholders, un `h1` por página y puntos de referencia (landmarks). Auditado con axe-core
+  (WCAG 2.1 A/AA) sin hallazgos en portada, producto y páginas legales.
+- **Seguridad:** encabezados `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options: DENY` y `Permissions-Policy` en todo el
+  sitio. No hay una política CSP estricta a propósito (Next.js inyecta scripts propios); se puede sumar con nonces si hace falta.
+- **Errores:** páginas 404 propias y pantalla de error (con cabecera y pie) si algo falla al mostrar una página.

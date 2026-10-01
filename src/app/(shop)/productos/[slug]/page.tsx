@@ -6,6 +6,7 @@ import { ProductGallery } from "@/components/product/product-gallery";
 import { ProductPurchase } from "@/components/product/product-purchase";
 import { ProductDetails } from "@/components/product/product-details";
 import { RelatedProducts } from "@/components/product/related-products";
+import { JsonLd } from "@/components/seo/json-ld";
 import { site } from "@/config/site";
 import { getCategory } from "@/lib/categories";
 import { availabilityLabel, formatPrice, getAvailability } from "@/lib/format";
@@ -80,12 +81,7 @@ export default async function ProductPage(props: PageProps<"/productos/[slug]">)
 
   return (
     <div className="mx-auto max-w-7xl px-5 pb-24 pt-8 md:px-10 md:pb-36 md:pt-12">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
-        }}
-      />
+      <JsonLd data={jsonLd} />
 
       <Breadcrumbs
         items={[

@@ -155,7 +155,7 @@ function PriceRange({
   };
 
   const input =
-    "h-11 w-full border border-ink/25 bg-transparent px-3 text-sm tabular-nums placeholder:text-stone/60 focus:border-ink focus:outline-none";
+    "h-11 w-full border border-ink/25 bg-transparent px-3 text-sm tabular-nums placeholder:text-stone focus:border-ink focus:outline-none";
 
   return (
     <form

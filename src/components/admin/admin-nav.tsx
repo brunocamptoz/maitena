@@ -75,7 +75,7 @@ export function AdminNav({ email, newOrders }: { email: string; newOrders: numbe
         >
           <ExternalLink size={14} strokeWidth={1.25} /> Ver tienda
         </Link>
-        <p className="truncate text-xs text-paper/45" title={email}>
+        <p className="truncate text-xs text-paper/55" title={email}>
           {email}
         </p>
         <form action={signOutAction}>

@@ -10,7 +10,7 @@ export async function ShippingBanner() {
   if (from === null) return null;
 
   return (
-    <div className="bg-silver text-ink">
+    <div role="region" aria-label="Promoción de envío" className="bg-silver text-ink">
       <p className="mx-auto max-w-7xl px-5 py-2.5 text-center text-[10px] uppercase tracking-[0.24em] md:px-10 md:text-[11px]">
         Envío gratis a partir de <strong className="font-medium">{formatPrice(from)}</strong>
       </p>

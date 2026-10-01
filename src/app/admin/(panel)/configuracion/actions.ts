@@ -1,8 +1,9 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { requireAdminAction } from "@/lib/admin/auth";
 import { parseShippingForm } from "@/lib/admin/shipping-schema";
+import { SHIPPING_TAG } from "@/lib/store-settings";
 
 export type ShippingState = { ok?: boolean; message?: string; errors?: Record<string, string> };
 
@@ -39,6 +40,8 @@ export async function saveShipping(_prev: ShippingState, formData: FormData): Pr
     .eq("id", true);
   if (error) return failure("ajustes", error);
 
+  // El cartel "Envío gratis a partir de…" de la tienda toma el monto de acá: se actualiza al instante.
+  revalidateTag(SHIPPING_TAG, { expire: 0 });
   revalidatePath("/admin/configuracion");
   return { ok: true, message: "Costos de envío guardados. Ya se aplican a las compras nuevas." };
 }

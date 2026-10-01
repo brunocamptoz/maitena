@@ -110,6 +110,8 @@ Entrar en `/admin` (no aparece en la tienda ni en buscadores). Secciones:
 - **Productos:** crear/editar (nombre, dirección web automática, descripción, categoría, precio, stock), publicar u ocultar,
   fotos múltiples (principal, orden, reemplazar, borrar), archivar y borrar (solo si nunca se vendió).
 - **Envíos:** costo general, por departamento y envío gratis desde un monto. Mientras no se guarden, la tienda no cobra.
+  Si hay un monto de "envío gratis desde", la tienda muestra arriba de todo un cartel "Envío gratis a partir de $ X" con
+  ese valor (se actualiza al guardar; sin monto no hay cartel).
 
 **Crear el usuario administrador** (una sola vez): ver [`supabase/README.md`](supabase/README.md#crear-el-usuario-administrador).
 

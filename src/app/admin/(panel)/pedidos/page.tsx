@@ -49,7 +49,12 @@ export default async function OrdersPage(props: PageProps<"/admin/pedidos">) {
       : query.or(`customer_email.ilike.%${q}%,customer_name.ilike.%${q}%,customer_last_name.ilike.%${q}%`);
   }
 
-  const { data: orders, count, error } = await query;
+  // Pedidos pagados que todavía no se enviaron: el mismo número que muestra el menú junto a "Pedidos".
+  const [{ data: orders, count, error }, fresh] = await Promise.all([
+    query,
+    db.from("orders").select("id", { count: "exact", head: true }).eq("order_status", "paid"),
+  ]);
+  const newOrders = fresh.count ?? 0;
   const pages = Math.max(1, Math.ceil((count ?? 0) / PAGE_SIZE));
 
   const href = (over: { estado?: string; pagina?: number }) => ({
@@ -72,9 +77,20 @@ export default async function OrdersPage(props: PageProps<"/admin/pedidos">) {
               key={t.key}
               href={href({ estado: t.key })}
               aria-current={tab.key === t.key ? "page" : undefined}
-              className={cn(chip(tab.key === t.key), "px-4 py-2")}
+              className={cn(chip(tab.key === t.key), "gap-2 px-4 py-2")}
             >
               {t.label}
+              {t.key === "nuevos" && newOrders > 0 && (
+                <span
+                  className={cn(
+                    "rounded-full px-2 py-0.5 text-[10px] tabular-nums tracking-normal",
+                    tab.key === t.key ? "bg-paper text-ink" : "bg-ink text-paper",
+                  )}
+                >
+                  {newOrders}
+                  <span className="sr-only"> sin enviar</span>
+                </span>
+              )}
             </Link>
           ))}
         </nav>

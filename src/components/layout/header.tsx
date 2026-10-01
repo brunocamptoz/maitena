@@ -30,14 +30,14 @@ export function Header() {
             onClick={() => setOpen(true)}
             aria-label="Abrir menú"
             aria-expanded={open}
-            className="-ml-2 flex h-11 w-11 items-center justify-center md:hidden"
+            className="-ml-2 flex h-11 w-11 items-center justify-center xl:hidden"
           >
             <span className="flex w-5 flex-col gap-[6px]">
               <span className="h-px w-full bg-current" />
               <span className="h-px w-3/5 bg-current" />
             </span>
           </button>
-          <nav aria-label="Categorías" className="hidden gap-8 md:flex">
+          <nav aria-label="Categorías" className="hidden gap-8 xl:flex">
             {nav.map((item) => (
               <Link
                 key={item.href}
@@ -64,7 +64,7 @@ export function Header() {
         <div className="flex items-center justify-end gap-7">
           <Link
             href="/catalogo"
-            className="hidden text-[11px] uppercase tracking-[0.22em] text-paper/70 transition-colors hover:text-paper md:block"
+            className="hidden text-[11px] uppercase tracking-[0.22em] text-paper/70 transition-colors hover:text-paper xl:block"
           >
             Ver todo
           </Link>
@@ -75,7 +75,7 @@ export function Header() {
       {/* Menú mobile */}
       <div
         className={cn(
-          "fixed inset-0 z-50 flex flex-col bg-ink px-6 pb-10 pt-5 transition-opacity duration-500 md:hidden",
+          "fixed inset-0 z-50 flex flex-col bg-ink px-6 pb-10 pt-5 transition-opacity duration-500 xl:hidden",
           open ? "opacity-100" : "pointer-events-none opacity-0",
         )}
         aria-hidden={!open}

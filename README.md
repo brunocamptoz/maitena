@@ -178,7 +178,7 @@ Pendientes que NO se pueden olvidar (marcá cada uno cuando esté hecho):
       una casilla obligatoria "Acepto los términos" en el checkout (hoy es un aviso "Al continuar aceptás…").
 - [ ] **Datos legales del negocio** en `src/config/legal.ts` (razón social, RUT, domicilio, plazo de entrega, política propia de
       cambios). Mientras estén en `null` las páginas no los muestran. La empresa de transporte (`carrier`, hoy **DAC**) y el plazo
-      de entrega (`deliveryTime`, hoy **3 a 10 días hábiles**) ya están
+      de entrega (`deliveryTime`, hoy **3 a 10 días hábiles desde que despachamos tu pedido**) ya están
       cargados y se usa en la home, la ficha de producto, envíos, privacidad y términos; si cambia, se edita en ese mismo archivo.
 - [ ] **Inscribir la base de datos de clientes en la URCDP** (Unidad Reguladora y de Control de Datos Personales, Ley 18.331,
       arts. 28-29): es una obligación de quien guarda datos personales de clientes.

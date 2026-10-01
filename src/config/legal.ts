@@ -17,6 +17,8 @@ export const legal = {
    * Mientras sea null la página de envíos explica el proceso sin prometer un plazo.
    */
   deliveryTime: "3 a 10 días hábiles" as string | null,
+  /** Desde cuándo se cuenta el plazo (ej.: "desde que despachamos tu pedido"). Si es null no se aclara. */
+  deliveryStartsAt: "desde que despachamos tu pedido" as string | null,
   /**
    * Política propia de cambios, en texto libre (ej.: cambios por talle dentro de X días). Es ADICIONAL a los
    * derechos que da la ley. Mientras sea null se invita a escribir para coordinar un cambio.

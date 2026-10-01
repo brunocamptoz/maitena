@@ -53,8 +53,8 @@ export default async function ShippingPage() {
       <Section title="Plazo de entrega">
         {legal.deliveryTime ? (
           <p>
-            El plazo de entrega es de <strong>{legal.deliveryTime}</strong>. Te avisamos por email en cuanto tu pedido
-            sale.
+            El plazo de entrega es de <strong>{legal.deliveryTime}</strong>
+            {legal.deliveryStartsAt ? ` ${legal.deliveryStartsAt}` : ""}. Te avisamos por email en cuanto sale.
           </p>
         ) : (
           <p>

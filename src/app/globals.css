@@ -31,6 +31,26 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/*
+ * Tailwind 4 dejó de poner la manito en los botones (el navegador usa la flecha). Se la damos a todo lo que se puede
+ * apretar; lo deshabilitado muestra "no permitido". Va en la capa base para que las clases cursor-* de cada
+ * componente sigan mandando.
+ */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  summary,
+  select:not(:disabled),
+  input:is([type="checkbox"], [type="radio"], [type="file"], [type="submit"], [type="button"]):not(:disabled),
+  label:has(> input:is([type="checkbox"], [type="radio"]):not(:disabled)) {
+    cursor: pointer;
+  }
+  button:disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+}
+
 ::selection {
   background: var(--ink);
   color: var(--paper);
@@ -167,16 +187,11 @@ body {
   transform-box: fill-box;
   transform-origin: center;
 }
-
-@keyframes orbit {
-  to {
-    transform: rotate(360deg);
+@media (max-width: 1023.98px) {
+  .animate-twinkle {
+    animation: none;
+    opacity: 0.75;
   }
-}
-.animate-orbit {
-  animation: orbit 160s linear infinite;
-  transform-box: fill-box;
-  transform-origin: center;
 }
 
 @keyframes marquee {
@@ -194,8 +209,7 @@ body {
 /* Grano fino sobre fondos oscuros: da textura y profundidad */
 .grain {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity: 0.07;
-  mix-blend-mode: overlay;
+  opacity: 0.045;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -210,7 +224,6 @@ body {
   .animate-glint,
   .animate-rise,
   .animate-float,
-  .animate-orbit,
   .animate-marquee {
     animation: none;
   }

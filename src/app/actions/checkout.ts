@@ -22,7 +22,13 @@ export async function quoteShipping(input: unknown): Promise<ShippingQuote> {
   if (!parsed.success) return { ok: false, message: "Elegí tu departamento para calcular el envío." };
   const { department, items } = parsed.data;
 
-  const products = await getProductsByIds(items.map((i) => i.productId));
+  // Productos, ajustes de envío y tarifa se piden a la vez: son tres lecturas independientes.
+  const db = createServiceClient();
+  const [products, settings, rate] = await Promise.all([
+    getProductsByIds(items.map((i) => i.productId)),
+    db.from("store_settings").select("shipping_default_cost, free_shipping_from, shipping_configured").single(),
+    db.from("shipping_rates").select("cost").eq("department", department).maybeSingle(),
+  ]);
   const byId = new Map(products.map((p) => [p.id, p]));
 
   let subtotal = 0;
@@ -37,14 +43,6 @@ export async function quoteShipping(input: unknown): Promise<ShippingQuote> {
     subtotal += product.price * line.quantity;
   }
 
-  const db = createServiceClient();
-  const [settings, rate] = await Promise.all([
-    db
-      .from("store_settings")
-      .select("shipping_default_cost, free_shipping_from, shipping_configured")
-      .single(),
-    db.from("shipping_rates").select("cost").eq("department", department).maybeSingle(),
-  ]);
   if (settings.error || !settings.data) {
     return { ok: false, message: "No pudimos calcular el envío. Probá de nuevo en unos minutos." };
   }

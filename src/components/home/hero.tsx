@@ -30,7 +30,6 @@ function HeroGem({ className, fillId }: { className?: string; fillId: string }) 
         strokeWidth="0.8"
         strokeLinecap="round"
         strokeDasharray="0.5 8"
-        className="animate-orbit"
       />
 
       {/* Brillante */}
@@ -74,7 +73,7 @@ export function Hero() {
       {/* Luz suave: reemplazable por fotografía editorial */}
       <div
         aria-hidden="true"
-        className="animate-glint pointer-events-none absolute -right-1/4 top-[-20%] -z-10 h-[90%] w-[85%] rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.16),transparent)] blur-2xl"
+        className="animate-glint pointer-events-none absolute -right-1/4 top-[-20%] -z-10 h-[90%] w-[85%] rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.16),transparent)]"
       />
       <div
         aria-hidden="true"

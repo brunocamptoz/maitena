@@ -230,3 +230,8 @@ Fotografías de categorías: `src/lib/categories.ts` (campo `image`). Mientras s
 - **Seguridad:** encabezados `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options: DENY` y `Permissions-Policy` en todo el
   sitio. No hay una política CSP estricta a propósito (Next.js inyecta scripts propios); se puede sumar con nonces si hace falta.
 - **Errores:** páginas 404 propias y pantalla de error (con cabecera y pie) si algo falla al mostrar una página.
+- **Rendimiento:** las funciones del servidor corren en **São Paulo (`gru1`, ver `vercel.json`)**, cerca de la base de datos de Supabase y de
+  los clientes (antes corrían en Washington y cada consulta pagaba ~120 ms de ida y vuelta: las páginas dinámicas —panel, carrito, checkout,
+  pedidos— tardaban ~0,7 s y ahora ~0,25 s). Si algún día se mueve la base de datos a otra región, conviene mover también esa región.
+  Lighthouse móvil de la portada: 95/100, sin saltos de diseño. Los efectos de la portada son CSS/SVG livianos y se apagan con
+  "reducir movimiento".
